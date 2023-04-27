@@ -22,7 +22,7 @@ while True:
             pygame.quit()
             exit()
             
-    Tabuleiro().desenhar_peças(tela)
+    Tabuleiro().desenhar_pecas(tela)
     
     
     pygame.display.flip()

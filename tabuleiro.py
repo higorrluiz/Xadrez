@@ -7,7 +7,7 @@ class Tabuleiro:
         self.tamanho_quadrado = 550 // 8
 
 
-    def desenhar_peças(self,tela):
+    def desenhar_pecas(self,tela):
         for linha in range(self.linhas):
             for coluna in range(self.colunas):
                 if linha % 2 == 0: #se a linha for par(primeiro indice é zero) desenha branco e verde(nessa ordem)
