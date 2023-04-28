@@ -8,7 +8,9 @@ class Match:
     def __init__(self, board: Type[Board]) -> None:
         board.match = self
         self.__board = board
+        # peça branca que pode ser capturada pelo en passant
         self.__passant_white = None
+        # peça preta que pode ser capturada pelo en passant
         self.__passant_black = None
 
     def get_board(self) -> Type[Board]:

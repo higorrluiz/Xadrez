@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Self
+
 
 class Piece(ABC):
 
@@ -23,6 +23,9 @@ class Piece(ABC):
         self._position = position.lower()
         self._moves = []
 
+    def get_inv_map(self) -> str:
+        return self.__inv_map
+
     def get_sprite(self) -> str:
         return self._sprite
     
@@ -40,17 +43,20 @@ class Piece(ABC):
         return pos_y
     
     def get_position(self) -> tuple[int, int]:
-        return self._position
+        row = self.get_row()
+        column = self.get_column()
+        return row, column
     
     def get_moves(self) -> list[tuple[int, int]]:
         return self._moves
         
+    # calcula os movimentos possíveis e os coloca em self._moves
     @abstractmethod
     def possible_moves(self) -> None:
         raise NotImplementedError
 
-    def move(self, pos: tuple[int, int]) -> Self:
+    def move(self, pos: tuple[int, int]) -> None:
+        self.board.move_piece(self.get_position(), pos)
         pos_column = self.__inv_map[pos[1]]
         pos_row = str(pos[0] + 1)
         self._position = pos_column + pos_row
-        self.board.move_piece(self.get_position, pos)

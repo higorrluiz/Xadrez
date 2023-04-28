@@ -1,5 +1,4 @@
 from piece import Piece
-from typing import Self
 
 
 class Rook(Piece):
@@ -27,7 +26,7 @@ class Rook(Piece):
         # falta implementação
         pass
 
-    def move(self, pos: tuple[int, int]) -> Self:
+    def move(self, pos: tuple[int, int]) -> None:
         self.__moved = True
         super().move(pos)
         pass

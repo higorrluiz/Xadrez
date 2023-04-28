@@ -1,5 +1,4 @@
 from piece import Piece
-from typing import Self
 
 
 class Bishop(Piece):
@@ -23,6 +22,6 @@ class Bishop(Piece):
         # falta implementação
         pass
 
-    def move(self, pos: tuple[int, int]) -> Self:
+    def move(self, pos: tuple[int, int]) -> None:
         # falta implementação
         pass

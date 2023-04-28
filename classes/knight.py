@@ -1,5 +1,4 @@
 from piece import Piece
-from typing import Self
 
 
 class Knight(Piece):
