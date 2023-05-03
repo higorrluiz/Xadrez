@@ -15,7 +15,7 @@ pygame.display.set_caption('Jogo')
 clock = pygame.time.Clock()
 
 
-tabuleiro = Tabuleiro()
+tabuleiro = Tabuleiro(tela)
 while True:
     tela.fill('black')
     for event in pygame.event.get():
@@ -23,9 +23,9 @@ while True:
             pygame.quit()
             exit()
         
-    tabuleiro.desenhar_tabuleiro(tela)
-    tabuleiro.desenhar_peças_pretas(tela)
-    tabuleiro.desenhar_peças_brancas(tela)
+    tabuleiro.desenhar_tabuleiro()
+    tabuleiro.desenhar_peças_pretas()
+    tabuleiro.desenhar_peças_brancas()
 
 
 
