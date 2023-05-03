@@ -1,7 +1,7 @@
 import pygame 
 from pygame.locals import *
 from sys import exit
-
+from importador import *
 from tabuleiro import Tabuleiro
 
 pygame.init()
@@ -15,16 +15,35 @@ pygame.display.set_caption('Jogo')
 clock = pygame.time.Clock()
 
 
+tabuleiro = Tabuleiro()
 while True:
     tela.fill('black')
     for event in pygame.event.get():
         if (event.type == botao_exit) or (event.type == QUIT):
             pygame.quit()
             exit()
-            
-    Tabuleiro().desenhar_peças(tela)
+        
+    tabuleiro.desenhar_tabuleiro(tela)
+    tabuleiro.desenhar_peças_pretas(tela)
+    tabuleiro.desenhar_peças_brancas(tela)
+
+
+
+   
     
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
     pygame.display.flip()
 
     #Setting FPS
