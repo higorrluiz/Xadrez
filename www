@@ -1,0 +1,1 @@
+[Rook((lista_pos_x[0],pos_y),"white"), Knight((lista_pos_x[1],pos_y), "white"), Bishop((lista_pos_x[2],pos_y),"white"), King((lista_pos_x[3],pos_y),"white"), Queen((lista_pos_x[4],pos_y),"white"), Bishop((lista_pos_x[5],pos_y),"white"), Knight((lista_pos_x[6],pos_y),"white"), Rook((lista_pos_x[7],pos_y),"white")]

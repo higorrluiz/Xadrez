@@ -1,5 +1,6 @@
 import pygame 
 from pygame.locals import *
+from classes.pawn import Pawn
 from importador import *
 
 class Tabuleiro:
@@ -21,26 +22,39 @@ class Tabuleiro:
 
 
     def desenhar_peças_pretas(self):
-        x = 0
+        black_pieces_group=pygame.sprite.Group()
         for peça_preta in black_pieces:
-            self.tela.blit(peça_preta,(x,0))
-            x= x+ self.tamanho_quadrado
-        x=0
-        for pawn in black_pawns:
-            self.tela.blit(pawn,(x,self.tamanho_quadrado))
-            x= x+ self.tamanho_quadrado
+            black_pieces_group.add(peça_preta)
+
+        black_pieces_group.draw(self.tela)
+        black_pieces_group.update()
+
+        #desenhando peão
+        
+
+
 
     def desenhar_peças_brancas(self):
-        x = 0
-        y=self.tam_tabuleiro
+        white_pieces_group=pygame.sprite.Group()
         for peça_branca in white_pieces:
-            self.tela.blit(peça_branca,(x,y))
-            x= x+ self.tamanho_quadrado
+            white_pieces_group.add(peça_branca)
+
+        white_pieces_group.draw(self.tela)
+        white_pieces_group.update()
+        
+
+        #desenhando peão
         x=0
+        y=self.tam_tabuleiro
         y= y - self.tamanho_quadrado
-        for pawn in white_pawns:
-            self.tela.blit(pawn,(x,y))
+        white_pawns_group=pygame.sprite.Group()
+        for i in range(8):
+            white_pawns.append(Pawn((x,y),"white"))
+            white_pawns_group.add(white_pawns[-1])
             x= x+ self.tamanho_quadrado
+
+        white_pawns_group.draw(self.tela)
+        white_pawns_group.update()
 
 
     #metodos privados

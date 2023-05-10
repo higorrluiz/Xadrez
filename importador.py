@@ -1,6 +1,13 @@
 import pygame 
 from pygame.locals import *
 
+from classes import *
+from classes.bishop import Bishop
+from classes.king import King
+from classes.knight import Knight
+from classes.queen import Queen
+from classes.rook import Rook
+
 black_queen = pygame.image.load('assets/images/black queen.png')
 black_queen = pygame.transform.scale(black_queen, (68, 68))
 black_queen_small = pygame.transform.scale(black_queen, (45, 45))
@@ -38,9 +45,17 @@ white_pawn = pygame.image.load('assets/images/white pawn.png')
 white_pawn = pygame.transform.scale(white_pawn, (68, 68))
 white_pawn_small = pygame.transform.scale(white_pawn, (45, 45))
 
+pos_x = 0
+lista_pos_x=[]
+for i in range(9):
+    lista_pos_x.append(pos_x)
+    pos_x = pos_x + 68.75
 
-black_pieces = [black_rook, black_knight, black_bishop, black_king, black_queen, black_bishop, black_knight, black_rook]
-black_pawns =[ black_pawn, black_pawn, black_pawn, black_pawn, black_pawn, black_pawn, black_pawn, black_pawn]
 
-white_pieces = [white_rook, white_knight, white_bishop, white_king, white_queen, white_bishop, white_knight, white_rook,]
-white_pawns = [white_pawn, white_pawn, white_pawn, white_pawn, white_pawn, white_pawn, white_pawn, white_pawn]
+black_pieces = [Rook((lista_pos_x[0],0),"black"), Knight((lista_pos_x[1],0), "black"), Bishop((lista_pos_x[2],0),"black"), King((lista_pos_x[3],0),"black"), Queen((lista_pos_x[4],0),"black"), Bishop((lista_pos_x[5],0),"black"), Knight((lista_pos_x[6],0),"black"), Rook((lista_pos_x[7],0),"black")]
+black_pawns =[]
+
+pos_y = 68.75 * 7
+
+white_pieces = [Rook((lista_pos_x[0],pos_y),"white"), Knight((lista_pos_x[1],pos_y), "white"), Bishop((lista_pos_x[2],pos_y),"white"), King((lista_pos_x[3],pos_y),"white"), Queen((lista_pos_x[4],pos_y),"white"), Bishop((lista_pos_x[5],pos_y),"white"), Knight((lista_pos_x[6],pos_y),"white"), Rook((lista_pos_x[7],pos_y),"white")]
+white_pawns = []
