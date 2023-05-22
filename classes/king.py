@@ -1,6 +1,8 @@
 import pygame
 from typing import Type
 
+from importador import POSICOES_TABULEIRO
+
 
 class King(pygame.sprite.Sprite):
 
@@ -8,5 +10,5 @@ class King(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load('assets/images/white king.png') if cor == 'white' else pygame.image.load('assets/images/black king.png')
         self.image = pygame.transform.scale(self.image, (68, 68))
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=POSICOES_TABULEIRO[pos])
         self.selecionado = False

@@ -1,14 +1,13 @@
 import pygame
-from importador import *
-
+from importador import POSICOES_TABULEIRO
 
 class Pawn(pygame.sprite.Sprite):
 
-    def __init__(self,pos,cor,poss=1):
+    def __init__(self,pos,cor):
         super().__init__()
         self.image = pygame.image.load('assets/images/white pawn.png') if cor == 'white' else pygame.image.load('assets/images/black pawn.png')
         self.image = pygame.transform.scale(self.image, (68, 68))
-        self.rect = self.image.get_rect(topleft=POSICOES_TABULEIRO[poss]) if poss != 1 else self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=POSICOES_TABULEIRO[pos])
         self.selecionado = False
 
     def mostrar_movimentos_validos(self,x_atual, y_atual,tela):
