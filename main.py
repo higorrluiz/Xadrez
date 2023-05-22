@@ -7,6 +7,7 @@ from importador import *
 from tabuleiro import Tabuleiro
 import math
 
+
 pygame.init()
 altura= 550
 largura=550
@@ -38,13 +39,20 @@ def selecionado(x,y):
 sel_x,sel_y=20000,30000
 x,y=0,0
 
+def posicao_do_quadrado():#pega a posicao do quadro clicado pelo mouse
+    mouse = pygame.mouse.get_pos()
+    x_novo=math.floor(mouse[0]/tam_quadrado)*tam_quadrado
+    y_novo=math.floor(mouse[1]/tam_quadrado)*tam_quadrado
+    return x_novo, y_novo
 
 x=0
 black_pawns_group=pygame.sprite.Group()
-for i in range(8):
-    black_pawns.append(Pawn((x,68.75),"black"))
+for pos in posicoes_pawns_pretos:
+    print(f"{pos}:#{POSICOES_TABULEIRO[pos]}")
+    black_pawns.append(Pawn(pos,"black",pos))
     black_pawns_group.add(black_pawns[-1])
     x= x+ 68.75
+
 
 peça = Dummy()
 while True:
@@ -65,25 +73,34 @@ while True:
         #permite selecao nas peças pretas
         if event.type == pygame.MOUSEBUTTONUP:
             for i in range(len(black_pawns)):
-                if black_pawns[i].rect.collidepoint(mouse_pos):
-                    sel_x,sel_y = mouse_pos[0],mouse_pos[1]
+                if black_pawns[i].rect.collidepoint(mouse_pos):#checa se o mouse cliclou em um peão preto
+                    sel_x,sel_y = mouse_pos[0],mouse_pos[1] 
                     peça = black_pawns[i]
                     peça.selecionado = True
+                    print(posicao_do_quadrado())
+                    
                 
-            for j in black_pieces:
+            for j in black_pieces:#checa se o mouse cliclou em um peça preta
                 if j.rect.collidepoint(mouse_pos):
                     sel_x,sel_y = mouse_pos[0],mouse_pos[1]
                     peça = j
                     peça.selecionado = True
+                    
 
-            if peça.selecionado == True and not (peça.rect.collidepoint(mouse_pos)):
-                x=math.floor(mouse_pos[0]/tam_quadrado)*tam_quadrado
-                y=math.floor(mouse_pos[1]/tam_quadrado)*tam_quadrado
+            if peça.selecionado == True and not (peça.rect.collidepoint(mouse_pos)):#se a peça esta selecionada e o usuario
+                x=posicao_do_quadrado()[0]
+                y=posicao_do_quadrado()[1]
                 sel_x,sel_y = mouse_pos[0],mouse_pos[1]
-                peça.rect.x= x
-                peça.rect.y= y
-                peça.selecionado = False
-      
+                
+                if movimentos_validos[0] == (x,y) or movimentos_validos[1] == (x,y):
+                    peça.rect.x= x
+                    peça.rect.y= y
+                    peça.selecionado = False
+                
+    if peça.selecionado == True:
+        x_bolinha=math.ceil(peça.rect.left/tam_quadrado)*tam_quadrado
+        y_bolinha=math.floor(peça.rect.top/tam_quadrado)*tam_quadrado
+        movimentos_validos  = peça.mostrar_movimentos_validos(x_bolinha,y_bolinha,tela)
     selecionado(sel_x,sel_y)
     
 

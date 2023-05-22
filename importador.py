@@ -55,7 +55,26 @@ for i in range(9):
 black_pieces = [Rook((lista_pos_x[0],0),"black"), Knight((lista_pos_x[1],0), "black"), Bishop((lista_pos_x[2],0),"black"), King((lista_pos_x[3],0),"black"), Queen((lista_pos_x[4],0),"black"), Bishop((lista_pos_x[5],0),"black"), Knight((lista_pos_x[6],0),"black"), Rook((lista_pos_x[7],0),"black")]
 black_pawns =[]
 
+# black_pieces = [Rook('8A',"black"), Knight('8B', "black"), Bishop('8C',"black"), King('8D',"black"), Queen('8E',"black"), Bishop('8F',"black"), Knight('8G',"black"), Rook('8H',"black")]
+
+
 pos_y = 68.75 * 7
 
 white_pieces = [Rook((lista_pos_x[0],pos_y),"white"), Knight((lista_pos_x[1],pos_y), "white"), Bishop((lista_pos_x[2],pos_y),"white"), King((lista_pos_x[3],pos_y),"white"), Queen((lista_pos_x[4],pos_y),"white"), Bishop((lista_pos_x[5],pos_y),"white"), Knight((lista_pos_x[6],pos_y),"white"), Rook((lista_pos_x[7],pos_y),"white")]
 white_pawns = []
+
+
+tamanho=68.75
+POSICOES_TABULEIRO = {
+    '8A':(tamanho*0,0), '8B':(tamanho*1,0),'8C':(tamanho*2,0),'8D':(tamanho*3,0),'8E':(tamanho*4,0),'8F':(tamanho*5,0),'8G':(tamanho*6,0),'8H':(tamanho*7,0),
+    '7A':(tamanho*0,tamanho), '7B':(tamanho*1,tamanho),'7C':(tamanho*2,tamanho),'7D':(tamanho*3,tamanho),'7E':(tamanho*4,tamanho),'7F':(tamanho*5,tamanho),'7G':(tamanho*6,tamanho),'7H':(tamanho*7,tamanho),
+    '6A':(tamanho*0,tamanho*2), '6B':(tamanho*1,tamanho*2),'6C':(tamanho*2,tamanho*2),'6D':(tamanho*3,tamanho*2),'6E':(tamanho*4,tamanho*2),'6F':(tamanho*5,tamanho*2),'6G':(tamanho*6,tamanho*2),'6H':(tamanho*6,tamanho*2),      
+    '5A':(tamanho*0,tamanho*3), '5B':(tamanho*1,tamanho*3),'5C':(tamanho*2,tamanho*3),'5D':(tamanho*3,tamanho*3),'5E':(tamanho*4,tamanho*3),'5F':(tamanho*5,tamanho*3),'5G':(tamanho*6,tamanho*3),'5H':(tamanho*7,tamanho*3),
+    '4A':(tamanho*0,tamanho*4), '4B':(tamanho*1,tamanho*4),'4C':(tamanho*2,tamanho*4),'4D':(tamanho*3,tamanho*4),'4E':(tamanho*4,tamanho*4),'4F':(tamanho*5,tamanho*4),'4G':(tamanho*6,tamanho*4),'4H':(tamanho*7,tamanho*4),
+    '3A':(tamanho*0,tamanho*5), '3B':(tamanho*1,tamanho*5),'3C':(tamanho*2,tamanho*5),'3D':(tamanho*3,tamanho*5),'3E':(tamanho*4,tamanho*5),'3F':(tamanho*5,tamanho*5),'3G':(tamanho*6,tamanho*5),'3H':(tamanho*7,tamanho*5),
+    '2A':(tamanho*0,tamanho*6), '2B':(tamanho*1,tamanho*6),'2C':(tamanho*2,tamanho*6),'2D':(tamanho*3,tamanho*6),'2E':(tamanho*4,tamanho*6),'2F':(tamanho*5,tamanho*6),'2G':(tamanho*6,tamanho*6),'2H':(tamanho*7,tamanho*6),
+    '1A':(tamanho*0,tamanho*7), '1B':(tamanho*1,tamanho*7),'1C':(tamanho*2,tamanho*7),'1D':(tamanho*3,tamanho*7),'1E':(tamanho*4,tamanho*7),'1F':(tamanho*5,tamanho*7),'1G':(tamanho*6,tamanho*7),'1H':(tamanho*7,tamanho*7),
+    }
+
+
+posicoes_pawns_pretos = ['7A','7B','7C','7D','7E','7F','7G','7H']

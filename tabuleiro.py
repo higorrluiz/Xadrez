@@ -30,8 +30,6 @@ class Tabuleiro:
         black_pieces_group.update()
 
         #desenhando peão
-        
-
 
 
     def desenhar_peças_brancas(self):
@@ -65,4 +63,4 @@ class Tabuleiro:
         else:
             pygame.draw.rect(self.tela, segunda_cor, (coluna*tam,linha*tam,tam,tam))
 
-            
+
