@@ -9,6 +9,8 @@ class Pawn(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (68, 68))
         self.rect = self.image.get_rect(topleft=POSICOES_TABULEIRO[pos])
         self.selecionado = False
+        self.cor = cor
+        self.nome = 'pawn'
 
     def mostrar_movimentos_validos(self,x_atual, y_atual,tela):
         x1_valido = x_atual+(68.75/2)

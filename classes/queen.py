@@ -12,3 +12,5 @@ class Queen(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (68, 68))
         self.rect = self.image.get_rect(topleft=POSICOES_TABULEIRO[pos])
         self.selecionado = False
+        self.cor = cor
+        self.nome = 'queen'
