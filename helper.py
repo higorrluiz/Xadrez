@@ -21,7 +21,7 @@ clock = pygame.time.Clock()
 
 
 
-peça = None
+peca = None
 tabuleiro = Tabuleiro(tela)
 
 #desenhando pawns pretos
@@ -31,12 +31,12 @@ for pos in posicoes_pawns_pretos:
     black_pawns_group.add(black_pawns[-1])
 
 
-## desenhando peças pretas
+## desenhando pecas pretas
 black_pieces = [Rook('8A',"black"), Knight('8B', "black"), Bishop('8C',"black"), King('8D',"black"), Queen('8E',"black"), Bishop('8F',"black"), Knight('8G',"black"), Rook('8H',"black")]
 
 black_pieces_group=pygame.sprite.Group()
-for peça in black_pieces:
-    black_pieces_group.add(peça)
+for peca in black_pieces:
+    black_pieces_group.add(peca)
 
 #### desenhando pawns brancos####
 white_pawns_group=pygame.sprite.Group()
@@ -44,12 +44,12 @@ for pos in posicoes_pawns_brancos:
     white_pawns.append(Pawn(pos,"white"))
     white_pawns_group.add(white_pawns[-1])
 
-#####desenhando peças brancas##########
+#####desenhando pecas brancas##########
 white_pieces = [Rook('1A',"white"), Knight('1B', "white"), Bishop('1C',"white"), King('1D',"white"), Queen('1E',"white"), Bishop('1F',"white"), Knight('1G',"white"), Rook('1H',"white")]
 
 white_pieces_group=pygame.sprite.Group()
-for peça in white_pieces:
-    white_pieces_group.add(peça)
+for peca in white_pieces:
+    white_pieces_group.add(peca)
 
 
 def selecionado(x,y):
