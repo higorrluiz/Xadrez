@@ -13,7 +13,7 @@ tela = pygame.display.set_mode((largura,altura))
 pygame.display.set_caption('Jogo')
 clock = pygame.time.Clock()
 
-tabuleiro = Board(tela, tam_quadrado)
+tabuleiro: Board = Board(tela, tam_quadrado)
 
 # desenhando pecas pretas
 black_pieces_group = pygame.sprite.Group()

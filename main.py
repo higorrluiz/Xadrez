@@ -2,11 +2,13 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from classes.piece import Piece
+from classes.match import Match
 from board_helper import *
 
+jogo: Match = Match(tabuleiro)
 
-sel_x,sel_y=20000,30000
-x,y=0,0
+sel_x, sel_y = 20000, 30000
+x, y = 0, 0
 peca: Piece = Piece()
 white_turn = True
 

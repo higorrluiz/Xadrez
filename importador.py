@@ -62,3 +62,5 @@ POSICOES_TABULEIRO_LISTA = [
     [(tamanho*0,tamanho*1), (tamanho*1,tamanho*1),(tamanho*2,tamanho*1),(tamanho*3,tamanho*1),(tamanho*4,tamanho*1),(tamanho*5,tamanho*1),(tamanho*6,tamanho*1),(tamanho*7,tamanho*1)],
     [(tamanho*0,tamanho*0), (tamanho*1,tamanho*0),(tamanho*2,tamanho*0),(tamanho*3,tamanho*0),(tamanho*4,tamanho*0),(tamanho*5,tamanho*0),(tamanho*6,tamanho*0),(tamanho*7,tamanho*0)]
 ]
+
+COLUNAS = dict({'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7})

@@ -116,23 +116,24 @@ class King(Piece):
     #             # falta considerar cheque no roque maior
     #             self.moves.append((linha, 7))
 
-    # def move(self, pos: tuple[int, int]) -> None:
-    #     self.moved = True
-    #     column = self.get_column()
-    #     # verifica se eh roque
-    #     if abs(column - pos[1]) > 1:
-    #         rook: Rook = self.board.get_piece(pos)
-    #         # roque maior
-    #         if pos[1] == 0:
-    #             king_column = 2
-    #             rook_column = 3
-    #         # roque menor
-    #         elif pos[1] == 7:
-    #             king_column = 6
-    #             rook_column = 5
-    #         else:
-    #             raise Exception("Invalid movement!")
-    #         super().move((self.get_row(), king_column))
-    #         rook.move((rook.get_row(), rook_column))
-    #     else:
-    #         super().move(pos)
+    def move(self, pos: tuple[int, int]) -> None:
+        self.moved = True
+        column = self.get_column()
+        # verifica se eh roque
+        if abs(column - pos[1]) > 1:
+            rook: Rook = self.board.get_piece(pos)
+            # roque maior
+            if pos[1] == 0:
+                king_column = 2
+                rook_column = 3
+            # roque menor
+            elif pos[1] == 7:
+                king_column = 6
+                rook_column = 5
+            else:
+                raise Exception("Invalid movement!")
+            super().move((self.get_row(), king_column))
+            self.board.match.decrement_cont()
+            rook.move((rook.get_row(), rook_column))
+        else:
+            super().move(pos)

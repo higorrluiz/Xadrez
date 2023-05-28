@@ -1,26 +1,31 @@
 import pygame
+from importador import *
 
-
-map = dict({'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7})
 
 class Piece(pygame.sprite.Sprite):
     
-    def __init__(self, pos: str = 'A1', is_white: bool = False) -> None:
+    def __init__(self, pos: str = '', is_white: bool = None) -> None:
         super().__init__()
 
-        if not isinstance(is_white, bool) or not isinstance(pos, str):
-            raise Exception("Invalid type!")
-        if len(pos) != 2:
-            raise Exception("Invalid postion size!")
-        if (pos[0].upper() not in map or not pos[1].isnumeric or 
-           int(pos[1]) < 1 or int(pos[1]) > 8):
-            raise Exception("Invalid pos!")
+        if pos == '' and is_white is None:
+            self.is_white = None
+            self.row = None
+            self.column = None
+        else:
+            if not isinstance(is_white, bool) or not isinstance(pos, str):
+                raise Exception("Invalid type!")
+            if len(pos) != 2:
+                raise Exception("Invalid postion size!")
+            if (pos[0].upper() not in COLUNAS or not pos[1].isnumeric or 
+                int(pos[1]) < 1 or int(pos[1]) > 8):
+                raise Exception("Invalid pos!")
+            
+            self.is_white = is_white
+            self.row = int(pos[1]) - 1  # linha (1-8) -> (0-7)
+            self.column = COLUNAS[pos[0].upper()]  # coluna (A-G) -> (0-7)
 
         self.board = None
         self.selecionado = False
-        self.is_white = is_white
-        self.row = int(pos[1]) - 1  # linha (1-8) -> (0-7)
-        self.column = map[pos[0].upper()]  # coluna (A-G) -> (0-7)
         self.image: pygame.image = None
         self.rect: pygame.Rect = None
         self.name = None
@@ -50,6 +55,7 @@ class Piece(pygame.sprite.Sprite):
         pass
 
     def move(self, pos: tuple[int, int]) -> None:
+        self.board.match.increment_cont()
         self.board.move_piece(self.get_pos(), pos)
         self.column = pos[1]
         self.row = pos[0]

@@ -99,16 +99,16 @@ class Pawn(Piece):
         piece = self.board.get_piece(pos)
         # verifica se eh en passant
         if column != pos[1] and piece is None:
-            self.board.move_piece(self.get_position(), pos, True)
-            pos_column = self._inv_map()[pos[1]]
-            pos_row = str(pos[0] + 1)
-            self._position = pos_column + pos_row
+            self.board.move_piece(self.get_pos(), pos, True)
+            self.column = pos[1]
+            self.row = pos[0]
         else:
             row = self.get_row()
             # verifica se moveu 2 casas
             if abs(row - pos[0]) == 2:
-                if self._is_white:
+                if self.is_white:
                     self.board.match.passant_white = self
                 else:
                     self.board.match.passant_black = self
             super().move(pos)
+        self.board.match.set_cont_zero()
