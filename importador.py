@@ -49,7 +49,7 @@ for i in range(9):
 
 
 # black_pieces = [Rook((lista_pos_x[0],0),"black"), Knight((lista_pos_x[1],0), "black"), Bishop((lista_pos_x[2],0),"black"), King((lista_pos_x[3],0),"black"), Queen((lista_pos_x[4],0),"black"), Bishop((lista_pos_x[5],0),"black"), Knight((lista_pos_x[6],0),"black"), Rook((lista_pos_x[7],0),"black")]
-black_pawns =[]
+black_pawns = []
 
 # black_pieces2 = [Rook('8A',"black")]#, Knight('8B', "black"), Bishop('8C',"black"), King('8D',"black"), Queen('8E',"black"), Bishop('8F',"black"), Knight('8G',"black"), Rook('8H',"black")]
 
@@ -62,16 +62,26 @@ white_pawns = []
 
 tamanho=68.75
 POSICOES_TABULEIRO = {
-    '8A':(tamanho*0,0), '8B':(tamanho*1,0),'8C':(tamanho*2,0),'8D':(tamanho*3,0),'8E':(tamanho*4,0),'8F':(tamanho*5,0),'8G':(tamanho*6,0),'8H':(tamanho*7,0),
-    '7A':(tamanho*0,tamanho), '7B':(tamanho*1,tamanho),'7C':(tamanho*2,tamanho),'7D':(tamanho*3,tamanho),'7E':(tamanho*4,tamanho),'7F':(tamanho*5,tamanho),'7G':(tamanho*6,tamanho),'7H':(tamanho*7,tamanho),
-    '6A':(tamanho*0,tamanho*2), '6B':(tamanho*1,tamanho*2),'6C':(tamanho*2,tamanho*2),'6D':(tamanho*3,tamanho*2),'6E':(tamanho*4,tamanho*2),'6F':(tamanho*5,tamanho*2),'6G':(tamanho*6,tamanho*2),'6H':(tamanho*6,tamanho*2),      
-    '5A':(tamanho*0,tamanho*3), '5B':(tamanho*1,tamanho*3),'5C':(tamanho*2,tamanho*3),'5D':(tamanho*3,tamanho*3),'5E':(tamanho*4,tamanho*3),'5F':(tamanho*5,tamanho*3),'5G':(tamanho*6,tamanho*3),'5H':(tamanho*7,tamanho*3),
-    '4A':(tamanho*0,tamanho*4), '4B':(tamanho*1,tamanho*4),'4C':(tamanho*2,tamanho*4),'4D':(tamanho*3,tamanho*4),'4E':(tamanho*4,tamanho*4),'4F':(tamanho*5,tamanho*4),'4G':(tamanho*6,tamanho*4),'4H':(tamanho*7,tamanho*4),
-    '3A':(tamanho*0,tamanho*5), '3B':(tamanho*1,tamanho*5),'3C':(tamanho*2,tamanho*5),'3D':(tamanho*3,tamanho*5),'3E':(tamanho*4,tamanho*5),'3F':(tamanho*5,tamanho*5),'3G':(tamanho*6,tamanho*5),'3H':(tamanho*7,tamanho*5),
-    '2A':(tamanho*0,tamanho*6), '2B':(tamanho*1,tamanho*6),'2C':(tamanho*2,tamanho*6),'2D':(tamanho*3,tamanho*6),'2E':(tamanho*4,tamanho*6),'2F':(tamanho*5,tamanho*6),'2G':(tamanho*6,tamanho*6),'2H':(tamanho*7,tamanho*6),
-    '1A':(tamanho*0,tamanho*7), '1B':(tamanho*1,tamanho*7),'1C':(tamanho*2,tamanho*7),'1D':(tamanho*3,tamanho*7),'1E':(tamanho*4,tamanho*7),'1F':(tamanho*5,tamanho*7),'1G':(tamanho*6,tamanho*7),'1H':(tamanho*7,tamanho*7),
-    }
+    'A8':(tamanho*0,tamanho*0), 'B8':(tamanho*1,tamanho*0),'C8':(tamanho*2,tamanho*0),'D8':(tamanho*3,tamanho*0),'E8':(tamanho*4,tamanho*0),'F8':(tamanho*5,tamanho*0),'G8':(tamanho*6,tamanho*0),'H8':(tamanho*7,tamanho*0),
+    'A7':(tamanho*0,tamanho*1), 'B7':(tamanho*1,tamanho*1),'C7':(tamanho*2,tamanho*1),'D7':(tamanho*3,tamanho*1),'E7':(tamanho*4,tamanho*1),'F7':(tamanho*5,tamanho*1),'G7':(tamanho*6,tamanho*1),'H7':(tamanho*7,tamanho*1),
+    'A6':(tamanho*0,tamanho*2), 'B6':(tamanho*1,tamanho*2),'C6':(tamanho*2,tamanho*2),'D6':(tamanho*3,tamanho*2),'E6':(tamanho*4,tamanho*2),'F6':(tamanho*5,tamanho*2),'G6':(tamanho*6,tamanho*2),'H6':(tamanho*7,tamanho*2),      
+    'A5':(tamanho*0,tamanho*3), 'B5':(tamanho*1,tamanho*3),'C5':(tamanho*2,tamanho*3),'D5':(tamanho*3,tamanho*3),'E5':(tamanho*4,tamanho*3),'F5':(tamanho*5,tamanho*3),'G5':(tamanho*6,tamanho*3),'H5':(tamanho*7,tamanho*3),
+    'A4':(tamanho*0,tamanho*4), 'B4':(tamanho*1,tamanho*4),'C4':(tamanho*2,tamanho*4),'D4':(tamanho*3,tamanho*4),'E4':(tamanho*4,tamanho*4),'F4':(tamanho*5,tamanho*4),'G4':(tamanho*6,tamanho*4),'H4':(tamanho*7,tamanho*4),
+    'A3':(tamanho*0,tamanho*5), 'B3':(tamanho*1,tamanho*5),'C3':(tamanho*2,tamanho*5),'D3':(tamanho*3,tamanho*5),'E3':(tamanho*4,tamanho*5),'F3':(tamanho*5,tamanho*5),'G3':(tamanho*6,tamanho*5),'H3':(tamanho*7,tamanho*5),
+    'A2':(tamanho*0,tamanho*6), 'B2':(tamanho*1,tamanho*6),'C2':(tamanho*2,tamanho*6),'D2':(tamanho*3,tamanho*6),'E2':(tamanho*4,tamanho*6),'F2':(tamanho*5,tamanho*6),'G2':(tamanho*6,tamanho*6),'H2':(tamanho*7,tamanho*6),
+    'A1':(tamanho*0,tamanho*7), 'B1':(tamanho*1,tamanho*7),'C1':(tamanho*2,tamanho*7),'D1':(tamanho*3,tamanho*7),'E1':(tamanho*4,tamanho*7),'F1':(tamanho*5,tamanho*7),'G1':(tamanho*6,tamanho*7),'H1':(tamanho*7,tamanho*7),
+}
 
+POSICOES_TABULEIRO_LISTA = [
+    [(tamanho*0,tamanho*0), (tamanho*1,tamanho*0),(tamanho*2,tamanho*0),(tamanho*3,tamanho*0),(tamanho*4,tamanho*0),(tamanho*5,tamanho*0),(tamanho*6,tamanho*0),(tamanho*7,tamanho*0)],
+    [(tamanho*0,tamanho*1), (tamanho*1,tamanho*1),(tamanho*2,tamanho*1),(tamanho*3,tamanho*1),(tamanho*4,tamanho*1),(tamanho*5,tamanho*1),(tamanho*6,tamanho*1),(tamanho*7,tamanho*1)],
+    [(tamanho*0,tamanho*2), (tamanho*1,tamanho*2),(tamanho*2,tamanho*2),(tamanho*3,tamanho*2),(tamanho*4,tamanho*2),(tamanho*5,tamanho*2),(tamanho*6,tamanho*2),(tamanho*7,tamanho*2)],      
+    [(tamanho*0,tamanho*3), (tamanho*1,tamanho*3),(tamanho*2,tamanho*3),(tamanho*3,tamanho*3),(tamanho*4,tamanho*3),(tamanho*5,tamanho*3),(tamanho*6,tamanho*3),(tamanho*7,tamanho*3)],
+    [(tamanho*0,tamanho*4), (tamanho*1,tamanho*4),(tamanho*2,tamanho*4),(tamanho*3,tamanho*4),(tamanho*4,tamanho*4),(tamanho*5,tamanho*4),(tamanho*6,tamanho*4),(tamanho*7,tamanho*4)],
+    [(tamanho*0,tamanho*5), (tamanho*1,tamanho*5),(tamanho*2,tamanho*5),(tamanho*3,tamanho*5),(tamanho*4,tamanho*5),(tamanho*5,tamanho*5),(tamanho*6,tamanho*5),(tamanho*7,tamanho*5)],
+    [(tamanho*0,tamanho*6), (tamanho*1,tamanho*6),(tamanho*2,tamanho*6),(tamanho*3,tamanho*6),(tamanho*4,tamanho*6),(tamanho*5,tamanho*6),(tamanho*6,tamanho*6),(tamanho*7,tamanho*6)],
+    [(tamanho*0,tamanho*7), (tamanho*1,tamanho*7),(tamanho*2,tamanho*7),(tamanho*3,tamanho*7),(tamanho*4,tamanho*7),(tamanho*5,tamanho*7),(tamanho*6,tamanho*7),(tamanho*7,tamanho*7)]
+]
 
-posicoes_pawns_pretos = ['7A','7B','7C','7D','7E','7F','7G','7H']
-posicoes_pawns_brancos = ['2A','2B','2C','2D','2E','2F','2G','2H']
+posicoes_pawns_pretos = ['A7','B7','C7','D7','E7','F7','G7','H7']
+posicoes_pawns_brancos = ['A2','B2','C2','D2','E2','F2','G2','H2']

@@ -1,13 +1,13 @@
 import pygame 
 from pygame.locals import *
 from sys import exit
-from classes.piece import Dummy
+from classes.piece import Piece
 from helper import *
-import math
+
 
 sel_x,sel_y=20000,30000
 x,y=0,0
-peca = Dummy()
+peca: Piece = Piece()
 
 
 while True:
@@ -47,6 +47,7 @@ while True:
                     sel_x,sel_y = mouse_pos[0],mouse_pos[1]
                     peca = j
                     peca.selecionado = True
+                    print(posicao_do_quadrado())
                     
 
             if peca.selecionado == True and not (peca.rect.collidepoint(mouse_pos)):#se a peca esta selecionada e o usuario
@@ -54,28 +55,17 @@ while True:
                 y=posicao_do_quadrado()[1]
                 sel_x,sel_y = mouse_pos[0],mouse_pos[1]
                 
-                if peca.nome == 'pawn':
+                if peca.name != None:
                     if movimentos_validos[0] == (x,y) or movimentos_validos[1] == (x,y):
                         peca.rect.x= x
                         peca.rect.y= y
                         peca.selecionado = False
                 
-    if peca.selecionado == True and peca.nome == 'pawn':
-        x_bolinha=math.ceil(peca.rect.left/tam_quadrado)*tam_quadrado
-        y_bolinha=math.floor(peca.rect.top/tam_quadrado)*tam_quadrado
-        movimentos_validos  = peca.mostrar_movimentos_validos(x_bolinha,y_bolinha,tela)
+    if peca.selecionado == True and peca.name != None:
+        x_bolinha=round(peca.rect.left/tam_quadrado)*tam_quadrado
+        y_bolinha=round(peca.rect.top/tam_quadrado)*tam_quadrado
+        movimentos_validos = peca.possible_moves(x_bolinha,y_bolinha,tela)
     selecionado(sel_x,sel_y)
-    
-
-
-
-
-
-
-
-
-
-
 
 
     pygame.display.flip()
@@ -83,5 +73,3 @@ while True:
     #Setting FPS
     clock.tick(60)
     pygame.display.update
-
-
