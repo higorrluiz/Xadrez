@@ -1,66 +1,46 @@
 import pygame 
 from pygame.locals import *
 
-from classes import *
-# from classes.rook import Rook
 
-black_queen = pygame.image.load('assets/images/black queen.png')
-black_queen = pygame.transform.scale(black_queen, (68, 68))
-black_queen_small = pygame.transform.scale(black_queen, (45, 45))
-black_king = pygame.image.load('assets/images/black king.png')
-black_king = pygame.transform.scale(black_king, (68, 68))
-black_king_small = pygame.transform.scale(black_king, (45, 45))
-black_rook = pygame.image.load('assets/images/black rook.png')
-black_rook = pygame.transform.scale(black_rook, (68, 68))
-black_rook_small = pygame.transform.scale(black_rook, (45, 45))
-black_bishop = pygame.image.load('assets/images/black bishop.png')
-black_bishop = pygame.transform.scale(black_bishop, (68, 68))
-black_bishop_small = pygame.transform.scale(black_bishop, (45, 45))
-black_knight = pygame.image.load('assets/images/black knight.png')
-black_knight = pygame.transform.scale(black_knight, (68, 68))
-black_knight_small = pygame.transform.scale(black_knight, (45, 45))
-black_pawn = pygame.image.load('assets/images/black pawn.png')
-black_pawn = pygame.transform.scale(black_pawn, (65, 65))
-black_pawn_small = pygame.transform.scale(black_pawn, (45, 45))
-white_queen = pygame.image.load('assets/images/white queen.png')
-white_queen = pygame.transform.scale(white_queen, (68, 68))
-white_queen_small = pygame.transform.scale(white_queen, (45, 45))
-white_king = pygame.image.load('assets/images/white king.png')
-white_king = pygame.transform.scale(white_king, (68, 68))
-white_king_small = pygame.transform.scale(white_king, (45, 45))
-white_rook = pygame.image.load('assets/images/white rook.png')
-white_rook = pygame.transform.scale(white_rook, (68, 68))
-white_rook_small = pygame.transform.scale(white_rook, (45, 45))
-white_bishop = pygame.image.load('assets/images/white bishop.png')
-white_bishop = pygame.transform.scale(white_bishop, (68, 68))
-white_bishop_small = pygame.transform.scale(white_bishop, (45, 45))
-white_knight = pygame.image.load('assets/images/white knight.png')
-white_knight = pygame.transform.scale(white_knight, (68, 68))
-white_knight_small = pygame.transform.scale(white_knight, (45, 45))
-white_pawn = pygame.image.load('assets/images/white pawn.png')
-white_pawn = pygame.transform.scale(white_pawn, (68, 68))
-white_pawn_small = pygame.transform.scale(white_pawn, (45, 45))
+# black_queen = pygame.image.load('assets/images/black queen.png')
+# black_queen = pygame.transform.scale(black_queen, (68, 68))
+# black_queen_small = pygame.transform.scale(black_queen, (45, 45))
+# black_king = pygame.image.load('assets/images/black king.png')
+# black_king = pygame.transform.scale(black_king, (68, 68))
+# black_king_small = pygame.transform.scale(black_king, (45, 45))
+# black_rook = pygame.image.load('assets/images/black rook.png')
+# black_rook = pygame.transform.scale(black_rook, (68, 68))
+# black_rook_small = pygame.transform.scale(black_rook, (45, 45))
+# black_bishop = pygame.image.load('assets/images/black bishop.png')
+# black_bishop = pygame.transform.scale(black_bishop, (68, 68))
+# black_bishop_small = pygame.transform.scale(black_bishop, (45, 45))
+# black_knight = pygame.image.load('assets/images/black knight.png')
+# black_knight = pygame.transform.scale(black_knight, (68, 68))
+# black_knight_small = pygame.transform.scale(black_knight, (45, 45))
+# black_pawn = pygame.image.load('assets/images/black pawn.png')
+# black_pawn = pygame.transform.scale(black_pawn, (65, 65))
+# black_pawn_small = pygame.transform.scale(black_pawn, (45, 45))
+# white_queen = pygame.image.load('assets/images/white queen.png')
+# white_queen = pygame.transform.scale(white_queen, (68, 68))
+# white_queen_small = pygame.transform.scale(white_queen, (45, 45))
+# white_king = pygame.image.load('assets/images/white king.png')
+# white_king = pygame.transform.scale(white_king, (68, 68))
+# white_king_small = pygame.transform.scale(white_king, (45, 45))
+# white_rook = pygame.image.load('assets/images/white rook.png')
+# white_rook = pygame.transform.scale(white_rook, (68, 68))
+# white_rook_small = pygame.transform.scale(white_rook, (45, 45))
+# white_bishop = pygame.image.load('assets/images/white bishop.png')
+# white_bishop = pygame.transform.scale(white_bishop, (68, 68))
+# white_bishop_small = pygame.transform.scale(white_bishop, (45, 45))
+# white_knight = pygame.image.load('assets/images/white knight.png')
+# white_knight = pygame.transform.scale(white_knight, (68, 68))
+# white_knight_small = pygame.transform.scale(white_knight, (45, 45))
+# white_pawn = pygame.image.load('assets/images/white pawn.png')
+# white_pawn = pygame.transform.scale(white_pawn, (68, 68))
+# white_pawn_small = pygame.transform.scale(white_pawn, (45, 45))
 
-pos_x = 0
-lista_pos_x=[]
-for i in range(9):
-    lista_pos_x.append(pos_x)
-    pos_x = pos_x + 68.75
+tamanho = 68.75
 
-
-# black_pieces = [Rook((lista_pos_x[0],0),"black"), Knight((lista_pos_x[1],0), "black"), Bishop((lista_pos_x[2],0),"black"), King((lista_pos_x[3],0),"black"), Queen((lista_pos_x[4],0),"black"), Bishop((lista_pos_x[5],0),"black"), Knight((lista_pos_x[6],0),"black"), Rook((lista_pos_x[7],0),"black")]
-black_pawns = []
-
-# black_pieces2 = [Rook('8A',"black")]#, Knight('8B', "black"), Bishop('8C',"black"), King('8D',"black"), Queen('8E',"black"), Bishop('8F',"black"), Knight('8G',"black"), Rook('8H',"black")]
-
-
-pos_y = 68.75 * 7
-
-# white_pieces = [Rook((lista_pos_x[0],pos_y),"white"), Knight((lista_pos_x[1],pos_y), "white"), Bishop((lista_pos_x[2],pos_y),"white"), King((lista_pos_x[3],pos_y),"white"), Queen((lista_pos_x[4],pos_y),"white"), Bishop((lista_pos_x[5],pos_y),"white"), Knight((lista_pos_x[6],pos_y),"white"), Rook((lista_pos_x[7],pos_y),"white")]
-white_pawns = []
-
-
-tamanho=68.75
 POSICOES_TABULEIRO = {
     'A8':(tamanho*0,tamanho*0), 'B8':(tamanho*1,tamanho*0),'C8':(tamanho*2,tamanho*0),'D8':(tamanho*3,tamanho*0),'E8':(tamanho*4,tamanho*0),'F8':(tamanho*5,tamanho*0),'G8':(tamanho*6,tamanho*0),'H8':(tamanho*7,tamanho*0),
     'A7':(tamanho*0,tamanho*1), 'B7':(tamanho*1,tamanho*1),'C7':(tamanho*2,tamanho*1),'D7':(tamanho*3,tamanho*1),'E7':(tamanho*4,tamanho*1),'F7':(tamanho*5,tamanho*1),'G7':(tamanho*6,tamanho*1),'H7':(tamanho*7,tamanho*1),
@@ -73,15 +53,12 @@ POSICOES_TABULEIRO = {
 }
 
 POSICOES_TABULEIRO_LISTA = [
-    [(tamanho*0,tamanho*0), (tamanho*1,tamanho*0),(tamanho*2,tamanho*0),(tamanho*3,tamanho*0),(tamanho*4,tamanho*0),(tamanho*5,tamanho*0),(tamanho*6,tamanho*0),(tamanho*7,tamanho*0)],
-    [(tamanho*0,tamanho*1), (tamanho*1,tamanho*1),(tamanho*2,tamanho*1),(tamanho*3,tamanho*1),(tamanho*4,tamanho*1),(tamanho*5,tamanho*1),(tamanho*6,tamanho*1),(tamanho*7,tamanho*1)],
-    [(tamanho*0,tamanho*2), (tamanho*1,tamanho*2),(tamanho*2,tamanho*2),(tamanho*3,tamanho*2),(tamanho*4,tamanho*2),(tamanho*5,tamanho*2),(tamanho*6,tamanho*2),(tamanho*7,tamanho*2)],      
-    [(tamanho*0,tamanho*3), (tamanho*1,tamanho*3),(tamanho*2,tamanho*3),(tamanho*3,tamanho*3),(tamanho*4,tamanho*3),(tamanho*5,tamanho*3),(tamanho*6,tamanho*3),(tamanho*7,tamanho*3)],
-    [(tamanho*0,tamanho*4), (tamanho*1,tamanho*4),(tamanho*2,tamanho*4),(tamanho*3,tamanho*4),(tamanho*4,tamanho*4),(tamanho*5,tamanho*4),(tamanho*6,tamanho*4),(tamanho*7,tamanho*4)],
-    [(tamanho*0,tamanho*5), (tamanho*1,tamanho*5),(tamanho*2,tamanho*5),(tamanho*3,tamanho*5),(tamanho*4,tamanho*5),(tamanho*5,tamanho*5),(tamanho*6,tamanho*5),(tamanho*7,tamanho*5)],
+    [(tamanho*0,tamanho*7), (tamanho*1,tamanho*7),(tamanho*2,tamanho*7),(tamanho*3,tamanho*7),(tamanho*4,tamanho*7),(tamanho*5,tamanho*7),(tamanho*6,tamanho*7),(tamanho*7,tamanho*7)],
     [(tamanho*0,tamanho*6), (tamanho*1,tamanho*6),(tamanho*2,tamanho*6),(tamanho*3,tamanho*6),(tamanho*4,tamanho*6),(tamanho*5,tamanho*6),(tamanho*6,tamanho*6),(tamanho*7,tamanho*6)],
-    [(tamanho*0,tamanho*7), (tamanho*1,tamanho*7),(tamanho*2,tamanho*7),(tamanho*3,tamanho*7),(tamanho*4,tamanho*7),(tamanho*5,tamanho*7),(tamanho*6,tamanho*7),(tamanho*7,tamanho*7)]
+    [(tamanho*0,tamanho*5), (tamanho*1,tamanho*5),(tamanho*2,tamanho*5),(tamanho*3,tamanho*2),(tamanho*4,tamanho*5),(tamanho*5,tamanho*5),(tamanho*6,tamanho*5),(tamanho*7,tamanho*5)],      
+    [(tamanho*0,tamanho*4), (tamanho*1,tamanho*4),(tamanho*2,tamanho*4),(tamanho*3,tamanho*3),(tamanho*4,tamanho*4),(tamanho*5,tamanho*4),(tamanho*6,tamanho*4),(tamanho*7,tamanho*4)],
+    [(tamanho*0,tamanho*3), (tamanho*1,tamanho*3),(tamanho*2,tamanho*3),(tamanho*3,tamanho*3),(tamanho*4,tamanho*3),(tamanho*5,tamanho*3),(tamanho*6,tamanho*3),(tamanho*7,tamanho*3)],
+    [(tamanho*0,tamanho*2), (tamanho*1,tamanho*2),(tamanho*2,tamanho*2),(tamanho*3,tamanho*2),(tamanho*4,tamanho*2),(tamanho*5,tamanho*2),(tamanho*6,tamanho*2),(tamanho*7,tamanho*2)],
+    [(tamanho*0,tamanho*1), (tamanho*1,tamanho*1),(tamanho*2,tamanho*1),(tamanho*3,tamanho*1),(tamanho*4,tamanho*1),(tamanho*5,tamanho*1),(tamanho*6,tamanho*1),(tamanho*7,tamanho*1)],
+    [(tamanho*0,tamanho*0), (tamanho*1,tamanho*0),(tamanho*2,tamanho*0),(tamanho*3,tamanho*0),(tamanho*4,tamanho*0),(tamanho*5,tamanho*0),(tamanho*6,tamanho*0),(tamanho*7,tamanho*0)]
 ]
-
-posicoes_pawns_pretos = ['A7','B7','C7','D7','E7','F7','G7','H7']
-posicoes_pawns_brancos = ['A2','B2','C2','D2','E2','F2','G2','H2']
