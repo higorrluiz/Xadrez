@@ -51,7 +51,7 @@ class Piece(pygame.sprite.Sprite):
         return self.moves
         
     # calcula os movimentos possiveis e os coloca em self._moves
-    def possible_moves(self,x_atual, y_atual,tela):
+    def possible_moves(self):
         pass
 
     def move(self, pos: tuple[int, int]) -> None:

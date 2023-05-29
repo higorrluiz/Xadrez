@@ -7,6 +7,7 @@ from classes.knight import Knight
 from classes.bishop import Bishop
 from classes.queen import Queen
 from classes.king import King
+from importador import *
 
 
 class Board():
@@ -21,6 +22,9 @@ class Board():
 
         self.white = []
         self.black = []
+        self.white_group=pygame.sprite.Group()
+        self.black_group = pygame.sprite.Group()
+
         self.matrix = []
         if state is None:
             # primeira linha da matriz corresponde a linha 1 do tabuleiro (a linha de baixo)
@@ -43,7 +47,10 @@ class Board():
         self.__insert_pieces()
 
     def get_piece(self, pos: tuple[int, int]) -> Type[Piece]:
-        return self.matrix[pos[0]][pos[1]]
+        if 0 <= pos[0] <= 7 and 0 <= pos[1] <= 7:
+            return self.matrix[pos[0]][pos[1]]
+        else:
+            return None
     
     def get_position(self, piece: Type[Piece]) -> tuple[int, int]:
         for i in range(self.linhas):
@@ -60,33 +67,43 @@ class Board():
                     piece.board = self
                     if piece.get_is_white():
                         self.white.append(piece)
+                        self.white_group.add(piece)
                     else:
                         self.black.append(piece)
+                        self.black_group.add(piece)
 
     def __add_piece(self, piece: Type[Piece], pos: tuple[int, int]) -> None:
         self.matrix[pos[0]][pos[1]] = piece
         piece.board = self
         if piece.get_is_white():
             self.white.append(piece)
+            self.white_group.add(piece)
         else:
             self.black.append(piece)
+            self.black_group.add(piece)
     
     def __delete_piece(self, pos: tuple[int, int]) -> None:
         piece = self.get_piece(pos)
         self.matrix[pos[0]][pos[1]] = None
         if piece.get_is_white():
             self.white.remove(piece)
+            self.white_group.remove(piece)
         else:
             self.black.remove(piece)
+            self.black_group.remove(piece)
 
     def move_piece(self, pos_old: tuple[int, int], pos_new: tuple[int, int], passant: bool = False) -> None:
-        piece = self.get_piece(pos_old)
+        piece: Piece = self.get_piece(pos_old)
+        movimento = POSICOES_TABULEIRO_LISTA[pos_new[0]][pos_new[1]]
+        piece.rect.x = movimento[0]
+        piece.rect.y = movimento[1]
         self.matrix[pos_old[0]][pos_old[1]] = None
         if self.get_piece(pos_new) is not None:
             self.__delete_piece(pos_new)
         self.matrix[pos_new[0]][pos_new[1]] = piece
         if passant:
-            self.__delete_piece((pos_new[0]-1, pos_new[1]))
+            aux = 1 if piece.is_white else -1
+            self.__delete_piece((pos_new[0]-aux, pos_new[1]))
     
     def promotion(self, piece: Type[Piece], pos: tuple[int, int]) -> None:
         self.__delete_piece(pos)
@@ -106,3 +123,14 @@ class Board():
             pygame.draw.rect(self.tela, primeira_cor, (coluna*self.tam, linha*self.tam, self.tam, self.tam))
         else:
             pygame.draw.rect(self.tela, segunda_cor, (coluna*self.tam, linha*self.tam, self.tam, self.tam))
+
+    def printa(self) -> None:
+        for linha in reversed(self.matrix):
+            for p in linha:
+                if p is not None:
+                    print((p.name).lower() if p.is_white else (p.name).upper(), end=' ')
+                else:
+                    print('-', end=' ')
+            print()
+        print()
+        print()
