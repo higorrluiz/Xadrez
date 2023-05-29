@@ -67,6 +67,10 @@ while True:
                     peca.move((7-round(y/tamanho), round(x/tamanho)))
                     peca.selecionado = False
                     movimentos_validos = []
+                    if white_turn:
+                        jogo.passant_black = None
+                    else:
+                        jogo.passant_white = None
                     white_turn = not white_turn
                     change = True
                     # tabuleiro.printa()
