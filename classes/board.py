@@ -52,12 +52,13 @@ class Board():
         else:
             return None
     
-    def get_position(self, piece: Type[Piece]) -> tuple[int, int]:
-        for i in range(self.linhas):
-            for j in range(self.colunas):
-                if piece == self.matrix[i][j]:
-                    return (i, j)
-        return None
+    def get_king(self, is_white: bool) -> King:
+        if is_white:
+            for piece in self.white:
+                if isinstance(piece, King): return piece
+        else:
+            for piece in self.black:
+                if isinstance(piece, King): return piece
 
     def __insert_pieces(self) -> None:
         for i in range(self.linhas):
