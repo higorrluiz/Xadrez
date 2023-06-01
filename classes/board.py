@@ -1,87 +1,136 @@
+import pygame
 from typing import Type
-from piece import Piece
-from pawn import Pawn
-from rook import Rook
-from knight import Knight
-from bishop import Bishop
-from queen import Queen
-from king import King
+from classes.piece import Piece
+from classes.pawn import Pawn
+from classes.rook import Rook
+from classes.knight import Knight
+from classes.bishop import Bishop
+from classes.queen import Queen
+from classes.king import King
+from importador import *
 
 
 class Board():
 
-    def __init__(self, state: str = None) -> None:
-        self.__sprite = ""
+    def __init__(self, tela: pygame.Surface, tam: float, state: str = None) -> None:
         self.match = None
-        self.__pieces = []
-        self.__white = []
-        self.__black = []
-        self.__matrix = []
+
+        self.linhas = 8
+        self.colunas = 8
+        self.tam = tam
+        self.tela = tela
+
+        self.white = []
+        self.black = []
+        self.white_group=pygame.sprite.Group()
+        self.black_group = pygame.sprite.Group()
+
+        self.matrix = []
         if state is None:
             # primeira linha da matriz corresponde a linha 1 do tabuleiro (a linha de baixo)
-            self.__matrix = [[Rook(True, 'a1'), Knight(True, 'b1'), Bishop(True, 'c1'), Queen(True, 'd1'),
-                              King(True, 'e1'), Bishop(True, 'f1'), Knight(True, 'g1'), Rook(True, 'h1')],
-                             [Pawn(True, 'a2'), Pawn(True, 'b2'), Pawn(True, 'c2'), Pawn(True, 'd2'),
-                              Pawn(True, 'e2'), Pawn(True, 'f2'), Pawn(True, 'g2'), Pawn(True, 'h2')],
-                             [None, None, None, None, None, None, None, None],
-                             [None, None, None, None, None, None, None, None],
-                             [None, None, None, None, None, None, None, None],
-                             [None, None, None, None, None, None, None, None],
-                             [Pawn(False, 'a7'), Pawn(False, 'b7'), Pawn(False, 'c7'), Pawn(False, 'd7'),
-                              Pawn(False, 'e7'), Pawn(False, 'f7'), Pawn(False, 'g7'), Pawn(False, 'h7')],
-                             [Rook(False, 'a8'), Knight(False, 'b8'), Bishop(False, 'c8'), Queen(False, 'd8'),
-                              King(False, 'e8'), Bishop(False, 'f8'), Knight(False, 'g8'), Rook(False, 'h8')]
-                              ]
+            self.matrix = [[Rook('A1', True), Knight('B1', True), Bishop('C1', True), Queen('D1', True),
+                            King('E1', True), Bishop('F1', True), Knight('G1', True), Rook('H1', True)],
+                           [Pawn('A2', True), Pawn('B2', True), Pawn('C2', True), Pawn('D2', True),
+                            Pawn('E2', True), Pawn('F2', True), Pawn('G2', True), Pawn('H2', True)],
+                           [None, None, None, None, None, None, None, None],
+                           [None, None, None, None, None, None, None, None],
+                           [None, None, None, None, None, None, None, None],
+                           [None, None, None, None, None, None, None, None],
+                           [Pawn('A7', False), Pawn('B7', False), Pawn('C7', False), Pawn('D7', False),
+                            Pawn('E7', False), Pawn('F7', False), Pawn('G7', False), Pawn('H7', False)],
+                           [Rook('A8', False), Knight('B8', False), Bishop('C8', False), Queen('D8', False),
+                            King('E8', False), Bishop('F8', False), Knight('G8', False), Rook('H8', False)]
+                          ]
         else:
             # falta implementação
             pass
         self.__insert_pieces()
 
-    def get_sprite(self) -> str:
-        return self.__sprite
-
     def get_piece(self, pos: tuple[int, int]) -> Type[Piece]:
-        return self.__matrix[pos[0]][pos[1]]
+        if 0 <= pos[0] <= 7 and 0 <= pos[1] <= 7:
+            return self.matrix[pos[0]][pos[1]]
+        else:
+            return None
+    
+    def get_position(self, piece: Type[Piece]) -> tuple[int, int]:
+        for i in range(self.linhas):
+            for j in range(self.colunas):
+                if piece == self.matrix[i][j]:
+                    return (i, j)
+        return None
 
     def __insert_pieces(self) -> None:
-        for i in range(8):
-            for j in range(8):
+        for i in range(self.linhas):
+            for j in range(self.colunas):
                 piece: Piece = self.get_piece((i, j))
                 if piece is not None:
                     piece.board = self
-                    self.__pieces.append(piece)
                     if piece.get_is_white():
-                        self.__white.append(piece)
+                        self.white.append(piece)
+                        self.white_group.add(piece)
                     else:
-                        self.__black.append(piece)
+                        self.black.append(piece)
+                        self.black_group.add(piece)
 
     def __add_piece(self, piece: Type[Piece], pos: tuple[int, int]) -> None:
-        self.__matrix[pos[0]][pos[1]] = piece
+        self.matrix[pos[0]][pos[1]] = piece
         piece.board = self
-        self.__pieces.append(piece)
         if piece.get_is_white():
-            self.__white.append(piece)
+            self.white.append(piece)
+            self.white_group.add(piece)
         else:
-            self.__black.append(piece)
+            self.black.append(piece)
+            self.black_group.add(piece)
     
     def __delete_piece(self, pos: tuple[int, int]) -> None:
         piece = self.get_piece(pos)
-        self.__matrix[pos[0]][pos[1]] = None
-        self.__pieces.remove(piece)
+        self.matrix[pos[0]][pos[1]] = None
         if piece.get_is_white():
-            self.__white.remove(piece)
+            self.white.remove(piece)
+            self.white_group.remove(piece)
         else:
-            self.__black.remove(piece)
+            self.black.remove(piece)
+            self.black_group.remove(piece)
 
     def move_piece(self, pos_old: tuple[int, int], pos_new: tuple[int, int], passant: bool = False) -> None:
-        piece = self.get_piece(pos_old)
-        self.__matrix[pos_old[0]][pos_old[1]] = None
+        piece: Piece = self.get_piece(pos_old)
+        movimento = POSICOES_TABULEIRO_LISTA[pos_new[0]][pos_new[1]]
+        piece.rect.x = movimento[0]
+        piece.rect.y = movimento[1]
+        self.matrix[pos_old[0]][pos_old[1]] = None
         if self.get_piece(pos_new) is not None:
             self.__delete_piece(pos_new)
-        self.__matrix[pos_new[0]][pos_new[1]] = piece
+        self.matrix[pos_new[0]][pos_new[1]] = piece
         if passant:
-            self.__delete_piece((pos_new[0]-1, pos_new[1]))
+            aux = 1 if piece.is_white else -1
+            self.__delete_piece((pos_new[0]-aux, pos_new[1]))
     
-    def promotion(self, piece: Type[Pawn], pos: tuple[int, int]) -> None:
+    def promotion(self, piece: Type[Piece], pos: tuple[int, int]) -> None:
         self.__delete_piece(pos)
         self.__add_piece(piece, pos)
+
+    def desenhar_tabuleiro(self):
+        for linha in range(self.linhas):
+            for coluna in range(self.colunas):
+                # desenha os quadrados vizinhos com cores diferentes
+                if linha % 2 == 0:
+                    self.__desenhar_linha(linha, coluna, 'white', 'dark green')
+                else:
+                    self.__desenhar_linha(linha, coluna, 'dark green', 'white')
+
+    def __desenhar_linha(self, linha, coluna, primeira_cor, segunda_cor):
+        if coluna % 2 == 0:
+            pygame.draw.rect(self.tela, primeira_cor, (coluna*self.tam, linha*self.tam, self.tam, self.tam))
+        else:
+            pygame.draw.rect(self.tela, segunda_cor, (coluna*self.tam, linha*self.tam, self.tam, self.tam))
+
+    def printa(self) -> None:
+        for linha in reversed(self.matrix):
+            for p in linha:
+                if p is not None:
+                    print((p.name).lower() if p.is_white else (p.name).upper(), end=' ')
+                else:
+                    print('-', end=' ')
+            print()
+        print()
+        print()

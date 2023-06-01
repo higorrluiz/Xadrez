@@ -1,27 +1,30 @@
 from typing import Type
-from board import Board
-from pawn import Pawn
+from classes.board import Board
+from classes.pawn import Pawn
 
 
 class Match:
 
     def __init__(self, board: Type[Board]) -> None:
         board.match = self
-        self.__board = board
-        # peça branca que pode ser capturada pelo en passant
-        self.__passant_white = None
-        # peça preta que pode ser capturada pelo en passant
-        self.__passant_black = None
-
-    def get_board(self) -> Type[Board]:
-        return self.__board
+        self.cont = 0
+        # peca branca que pode ser capturada pelo en passant
+        self.passant_white: Pawn = None
+        # peca preta que pode ser capturada pelo en passant
+        self.passant_black: Pawn = None
     
-    def get_passant_white(self) -> Type[Pawn]:
-        return self.__passant_white
+    def get_cont(self) -> int:
+        return self.cont
+    
+    def set_cont_zero(self) -> None:
+        self.cont = 0
 
-    def get_passant_black(self) -> Type[Pawn]:
-        return self.__passant_black    
+    def increment_cont(self) -> None:
+        self.cont += 1
+
+    def decrement_cont(self) -> None:
+        self.cont -= 1
     
     # 
-    # métodos de condição de fim de partida
+    # metodos de condicao de fim de partida
     # 
