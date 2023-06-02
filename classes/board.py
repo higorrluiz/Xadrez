@@ -51,6 +51,9 @@ class Board():
             return self.matrix[pos[0]][pos[1]]
         else:
             return None
+        
+    def get_pieces(self, is_white: bool) -> list[Piece]:
+        return self.white if is_white else self.black
     
     def get_king(self, is_white: bool) -> King:
         if is_white:

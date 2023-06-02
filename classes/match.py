@@ -46,7 +46,13 @@ class Match:
         if self._checked_from_diagonal(king): return True
         if self._checked_from_line(king): return True
         return False
-
+    
+    def is_checkmate(self, is_white: bool, check: bool) -> bool:
+        if not check: return False
+        pieces: list[Piece] = self.board.get_pieces(is_white)
+        for piece in pieces:
+            if piece.get_moves(): return False
+        return True
 
     def _checked_by_knight(self, king: King) -> bool:
         linha, coluna = king.get_pos()
