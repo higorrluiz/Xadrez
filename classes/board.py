@@ -51,6 +51,9 @@ class Board():
             return self.matrix[pos[0]][pos[1]]
         else:
             return None
+        
+    def get_pieces(self, is_white: bool) -> list[Piece]:
+        return self.white if is_white else self.black
     
     def get_position(self, piece: Type[Piece]) -> tuple[int, int]:
         for i in range(self.linhas):
@@ -99,9 +102,11 @@ class Board():
         piece.rect.y = movimento[1]
         self.matrix[pos_old[0]][pos_old[1]] = None
         if self.get_piece(pos_new) is not None:
+            self.match.set_cont_zero()
             self.__delete_piece(pos_new)
         self.matrix[pos_new[0]][pos_new[1]] = piece
         if passant:
+            self.match.set_cont_zero()
             aux = 1 if piece.is_white else -1
             self.__delete_piece((pos_new[0]-aux, pos_new[1]))
     
