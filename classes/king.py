@@ -95,8 +95,8 @@ class King(Piece):
             rook: Piece = self.board.get_piece((linha, 0))
             if (p1 is None and p2 is None and p3 is None and isinstance(rook, Rook) and 
                 rook.get_is_white() == self.is_white and not rook.get_moved()):
-                # falta considerar cheque no roque menor
-                self.moves.append((linha, 0))
+                # falta considerar cheque no roque maior
+                self.moves.append((linha, 2))
 
             # roque menor
             p1 = self.board.get_piece((linha, 5))
@@ -104,27 +104,26 @@ class King(Piece):
             rook = self.board.get_piece((linha, 7))
             if (p1 is None and p2 is None and isinstance(rook, Rook) and 
                 rook.get_is_white() == self.is_white and not rook.get_moved()):
-                # falta considerar cheque no roque maior
-                self.moves.append((linha, 7))
+                # falta considerar cheque no roque menor
+                self.moves.append((linha, 6))
 
     def move(self, pos: tuple[int, int]) -> None:
         self.moved = True
         column = self.get_column()
         # verifica se eh roque
         if abs(column - pos[1]) > 1:
-            rook: Rook = self.board.get_piece(pos)
             # roque maior
-            if pos[1] == 0:
-                king_column = 2
-                rook_column = 3
+            if pos[1] == 2:
+                rook: Rook = self.board.get_piece((pos[0], 0))
+                rook_column = 3    
             # roque menor
-            elif pos[1] == 7:
-                king_column = 6
+            elif pos[1] == 6:
+                rook: Rook = self.board.get_piece((pos[0], 7))
                 rook_column = 5
             else:
                 raise Exception("Invalid movement!")
-            super().move((self.get_row(), king_column))
+            super().move(pos)
             self.board.match.decrement_cont()
-            rook.move((rook.get_row(), rook_column))
+            rook.move((pos[0], rook_column))
         else:
             super().move(pos)
