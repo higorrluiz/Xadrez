@@ -44,15 +44,12 @@ class Match:
             if piece.get_moves(): return False
         return True
     
-    def _insufficient_material(self) -> bool:  # K - KN - KB - KNN
+    def _insufficient_material(self) -> bool:  # K - KN - KB
         for is_white in [False, True]:
-            knights = 0
             pieces: list[Piece] = self.board.get_pieces(is_white)
-            if len(pieces) >= 4: return False 
+            if len(pieces) >= 3: return False 
             for piece in pieces:
                 if isinstance(piece, Queen): return False
                 if isinstance(piece, Rook): return False
                 if isinstance(piece, Pawn): return False
-                if isinstance(piece, Knight): knights += 1
-            if len(pieces) == 3 and knights != 2: return False
         return True
