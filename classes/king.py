@@ -101,7 +101,7 @@ class King(Piece):
                 if not self.board.match.king_is_checked(self.is_white):
                     self.move((linha, 2))
                     if not self.board.match.king_is_checked(self.is_white):
-                        self.moves.append((linha, 0))  # movimento
+                        self.moves.append((linha, 2))  # movimento
                     self.move((linha, 3))
                     self.move((linha, 4))
                 else:
@@ -119,7 +119,7 @@ class King(Piece):
                 if not self.board.match.king_is_checked(self.is_white):
                     self.move((linha, 6))
                     if not self.board.match.king_is_checked(self.is_white):
-                        self.moves.append((linha, 7))  # movimento
+                        self.moves.append((linha, 6))  # movimento
                     self.move((linha, 5))
                     self.move((linha, 4))
                 else:
@@ -131,19 +131,18 @@ class King(Piece):
         column = self.get_column()
         # verifica se eh roque
         if abs(column - pos[1]) > 1:
-            rook: Rook = self.board.get_piece(pos)
             # roque maior
-            if pos[1] == 0:
-                king_column = 2
-                rook_column = 3
+            if pos[1] == 2:
+                rook: Rook = self.board.get_piece((pos[0], 0))
+                rook_column = 3    
             # roque menor
-            elif pos[1] == 7:
-                king_column = 6
+            elif pos[1] == 6:
+                rook: Rook = self.board.get_piece((pos[0], 7))
                 rook_column = 5
             else:
                 raise Exception("Invalid movement!")
-            super().move((self.get_row(), king_column))
+            super().move(pos)
             self.board.match.decrement_cont()
-            rook.move((rook.get_row(), rook_column))
+            rook.move((pos[0], rook_column))
         else:
             super().move(pos)

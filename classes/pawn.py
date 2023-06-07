@@ -97,11 +97,11 @@ class Pawn(Piece):
             self.row = pos[0]
         else:
             row = self.get_row()
-            super().move(pos)
             # verifica se moveu 2 casas
             if abs(row - pos[0]) == 2:
                 if self.is_white:
                     self.board.match.passant_white = self
                 else:
                     self.board.match.passant_black = self
+            super().move(pos)
         self.board.match.set_cont_zero()

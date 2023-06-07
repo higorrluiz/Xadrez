@@ -46,11 +46,10 @@ while True:
             for p in pecas:  # checa se o mouse cliclou em um peca
                 if p.rect.collidepoint(mouse_pos):
                     sel_x, sel_y = mouse_pos[0], mouse_pos[1]
-                    if not (isinstance(peca, King) and isinstance(p, Rook)):
-                        peca = p
-                        peca.selecionado = True
-                        movimentos_validos = peca.get_moves()
-                        movimentos_validos = [POSICOES_TABULEIRO_LISTA[x][y] for (x, y) in movimentos_validos]
+                    peca = p
+                    peca.selecionado = True
+                    movimentos_validos = peca.get_moves()
+                    movimentos_validos = [POSICOES_TABULEIRO_LISTA[x][y] for (x, y) in movimentos_validos]
                     print(posicao_do_quadrado())
 
             # se a peca esta selecionada e o usuario
@@ -65,6 +64,10 @@ while True:
 
                     peca.selecionado = False
                     movimentos_validos = []
+                    if white_turn:
+                        jogo.passant_black = None
+                    else:
+                        jogo.passant_white = None
                     white_turn = not white_turn
                     
                     check = jogo.king_is_checked(white_turn)
