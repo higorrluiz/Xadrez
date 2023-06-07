@@ -57,10 +57,12 @@ class Menu:
         texto_voltar = fonte.render('VOLTAR', True, (0, 0, 0))
         cor_ativado = (0, 255, 0) if show_possible_moves else (128, 128, 128)
         cor_desativado = (255, 0, 0) if not show_possible_moves else (128, 128, 128)
+        padding_ativado = (200 - texto_ativado.get_width()) // 2
+        padding_desativado = (200 - texto_desativado.get_width()) // 2
         pygame.draw.rect(self.tela, cor_ativado, (self.tela.get_width() // 2 - 200, self.tela.get_height() // 2, 200, 50))
         pygame.draw.rect(self.tela, cor_desativado, (self.tela.get_width() // 2, self.tela.get_height() // 2, 200, 50))
-        self.tela.blit(texto_ativado, (self.tela.get_width() // 2 - texto_ativado.get_width() - 46, self.tela.get_height() // 2 + 25 - texto_ativado.get_height() // 2))
-        self.tela.blit(texto_desativado, (self.tela.get_width() // 2 + texto_desativado.get_width() - 155, self.tela.get_height() // 2 + 25 - texto_desativado.get_height() // 2))
+        self.tela.blit(texto_ativado, ((self.tela.get_width() // 2) - texto_ativado.get_width() - padding_ativado, self.tela.get_height() // 2 + 25 - texto_ativado.get_height() // 2))
+        self.tela.blit(texto_desativado, ((self.tela.get_width() // 2) + padding_desativado, self.tela.get_height() // 2 + 25 - texto_desativado.get_height() // 2))
         pygame.draw.rect(self.tela, (0, 0, 0), botao_voltar, 2)
         self.tela.blit(texto_voltar, (self.tela.get_width() // 2 - texto_voltar.get_width() // 2, self.tela.get_height() - 75 - texto_voltar.get_height() // 2))
         for event in pygame.event.get():
