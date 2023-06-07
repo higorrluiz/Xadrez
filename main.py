@@ -17,6 +17,10 @@ change = True
 movimentos_validos = []
 # tabuleiro.printa()
 
+pecas = tabuleiro.get_pieces(white_turn)
+for p in pecas:
+    p.possible_moves(False)
+
 while True:
     tela.fill('black')
 
@@ -26,13 +30,6 @@ while True:
     tabuleiro.black_group.update()
     tabuleiro.white_group.draw(tela)
     tabuleiro.white_group.update()
-
-    if change:
-        p: Piece
-        pecas = tabuleiro.white if white_turn else tabuleiro.black
-        for p in pecas:
-            p.possible_moves()
-        change = False
 
     pygame.event.set_blocked(pygame.MOUSEMOTION)
     for event in pygame.event.get():
@@ -65,10 +62,18 @@ while True:
                     peca.rect.x = x
                     peca.rect.y = y
                     peca.move((7-round(y/tamanho), round(x/tamanho)))
+
                     peca.selecionado = False
                     movimentos_validos = []
                     white_turn = not white_turn
-                    change = True
+                    
+                    check = jogo.king_is_checked(white_turn)
+                    pecas = tabuleiro.get_pieces(white_turn)
+                    for p in pecas:
+                        p.possible_moves(check)
+                        
+                    print(check, jogo.is_checkmate(white_turn, check))
+                    print(jogo.cont)
                     # tabuleiro.printa()
     
     for (x, y) in movimentos_validos:

@@ -49,9 +49,34 @@ class Piece(pygame.sprite.Sprite):
     
     def get_moves(self) -> list[tuple[int, int]]:
         return self.moves
+    
+    def verify_moves(self, check: bool = True) -> None:
+        column = self.column
+        row = self.row
+        white = self.board.white
+        black = self.board.black
+        white_group = self.board.white_group
+        black_group = self.board.black_group
+        matrix = self.board.matrix
+        cont = self.board.match.cont
+
+        for i in range(len(self.moves)-1, -1, -1):
+            self.move(self.moves[i])
+            if check:
+                if self.board.match.king_is_checked(self.is_white): del self.moves[i]
+            else:
+                if self.board.match.discovered_check(self.is_white): del self.moves[i]
+            self.column = column
+            self.row = row
+            self.board.white = white
+            self.board.black = black
+            self.board.white_group = white_group
+            self.board.black_group = black_group
+            self.board.matrix = matrix
+        self.board.match.cont = cont
         
-    # calcula os movimentos possiveis e os coloca em self._moves
-    def possible_moves(self):
+    # calcula os movimentos possiveis e os coloca em self.moves
+    def possible_moves(self, check: bool) -> None:
         pass
 
     def move(self, pos: tuple[int, int]) -> None:

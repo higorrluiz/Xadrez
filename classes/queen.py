@@ -14,7 +14,7 @@ class Queen(Piece):
         self.rect = self.image.get_rect(topleft=POSICOES_TABULEIRO[pos])
         self.name = 'q'
     
-    def possible_moves(self) -> None:
+    def possible_moves(self, check: bool) -> None:
         # limpa a lista de movimentos e pega a posicao da peca
         self.moves = []
         linha, coluna = self.get_pos()
@@ -110,3 +110,5 @@ class Queen(Piece):
             piece = self.board.get_piece((aux_linha, aux_coluna))
         if piece is not None and piece.is_white != self.is_white:
             self.moves.append((aux_linha, aux_coluna))
+    
+        self.verify_moves(check)
