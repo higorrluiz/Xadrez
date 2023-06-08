@@ -126,7 +126,7 @@ class King(Piece):
                     self.move((linha, 4))
                 self.board.match.cont = cont
 
-    def move(self, pos: tuple[int, int]) -> None:
+    def move(self, pos: tuple[int, int], mock: bool = False) -> None:
         self.moved = True
         column = self.get_column()
         # verifica se eh roque
@@ -141,8 +141,8 @@ class King(Piece):
                 rook_column = 5
             else:
                 raise Exception("Invalid movement!")
-            super().move(pos)
+            super().move(pos, mock)
             self.board.match.decrement_cont()
-            rook.move((pos[0], rook_column))
+            rook.move((pos[0], rook_column), mock)
         else:
-            super().move(pos)
+            super().move(pos, mock)

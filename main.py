@@ -2,8 +2,6 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from classes.piece import Piece
-from classes.king import King
-from classes.rook import Rook
 from classes.match import Match
 from board_helper import *
 
@@ -13,13 +11,13 @@ sel_x, sel_y = 20000, 30000
 x, y = 0, 0
 peca: Piece = Piece()
 white_turn = True
-change = True
+check = False
 movimentos_validos = []
 # tabuleiro.printa()
 
 pecas = tabuleiro.get_pieces(white_turn)
 for p in pecas:
-    p.possible_moves(False)
+    p.possible_moves(check)
 
 while True:
     tela.fill('black')
@@ -75,8 +73,9 @@ while True:
                     for p in pecas:
                         p.possible_moves(check)
                         
-                    print(check, jogo.is_checkmate(white_turn, check))
-                    print(jogo.cont)
+                    if jogo.is_checkmate(white_turn, check):
+                        # tela de fim de jogo: xeque-mate
+                        pass
                     # tabuleiro.printa()
     
     for (x, y) in movimentos_validos:

@@ -69,7 +69,7 @@ class Rook(Piece):
 
         self.verify_moves(check)
 
-    def move(self, pos: tuple[int, int]) -> None:
+    def move(self, pos: tuple[int, int], mock: bool = False) -> None:
         self.moved = True
-        super().move(pos)
+        super().move(pos, mock)
         pass

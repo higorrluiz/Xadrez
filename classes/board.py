@@ -86,28 +86,31 @@ class Board():
             self.black.append(piece)
             self.black_group.add(piece)
     
-    def __delete_piece(self, pos: tuple[int, int]) -> None:
+    def __delete_piece(self, pos: tuple[int, int], mock: bool = False) -> None:
         piece = self.get_piece(pos)
         self.matrix[pos[0]][pos[1]] = None
-        if piece.get_is_white():
-            self.white.remove(piece)
-            self.white_group.remove(piece)
-        else:
-            self.black.remove(piece)
-            self.black_group.remove(piece)
+        if not mock:
+            if piece.get_is_white():
+                self.white.remove(piece)
+                self.white_group.remove(piece)
+            else:
+                self.black.remove(piece)
+                self.black_group.remove(piece)
 
-    def move_piece(self, pos_old: tuple[int, int], pos_new: tuple[int, int], passant: bool = False) -> None:
+    def move_piece(self, pos_old: tuple[int, int], pos_new: tuple[int, int], 
+                   passant: bool = False, mock: bool = False) -> None:
         piece: Piece = self.get_piece(pos_old)
-        movimento = POSICOES_TABULEIRO_LISTA[pos_new[0]][pos_new[1]]
-        piece.rect.x = movimento[0]
-        piece.rect.y = movimento[1]
+        if not mock:
+            movimento = POSICOES_TABULEIRO_LISTA[pos_new[0]][pos_new[1]]
+            piece.rect.x = movimento[0]
+            piece.rect.y = movimento[1]
         self.matrix[pos_old[0]][pos_old[1]] = None
         if self.get_piece(pos_new) is not None:
-            self.__delete_piece(pos_new)
+            self.__delete_piece(pos_new, mock)
         self.matrix[pos_new[0]][pos_new[1]] = piece
         if passant:
             aux = 1 if piece.is_white else -1
-            self.__delete_piece((pos_new[0]-aux, pos_new[1]))
+            self.__delete_piece((pos_new[0]-aux, pos_new[1]), mock)
     
     def promotion(self, piece: Type[Piece], pos: tuple[int, int]) -> None:
         self.__delete_piece(pos)
