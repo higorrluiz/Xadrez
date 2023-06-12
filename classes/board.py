@@ -89,13 +89,12 @@ class Board():
     def __delete_piece(self, pos: tuple[int, int], mock: bool = False) -> None:
         piece = self.get_piece(pos)
         self.matrix[pos[0]][pos[1]] = None
-        if not mock:
-            if piece.get_is_white():
-                self.white.remove(piece)
-                self.white_group.remove(piece)
-            else:
-                self.black.remove(piece)
-                self.black_group.remove(piece)
+        if piece.get_is_white():
+            self.white.remove(piece)
+            if not mock: self.white_group.remove(piece)
+        else:
+            self.black.remove(piece)
+            if not mock: self.black_group.remove(piece)
 
     def move_piece(self, pos_old: tuple[int, int], pos_new: tuple[int, int], 
                    passant: bool = False, mock: bool = False) -> None:
