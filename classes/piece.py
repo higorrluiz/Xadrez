@@ -55,6 +55,10 @@ class Piece(pygame.sprite.Sprite):
         row = self.row
         matrix = [row[:] for row in self.board.matrix]
         cont = self.board.match.cont
+        passant_white = self.board.match.passant_white
+        passant_black = self.board.match.passant_black
+        if self.name.lower() in 'kr':
+            moved = self.moved
 
         # percorre lista ao contrario para permitir remocao
         for i in range(len(self.moves)-1, -1, -1):
@@ -69,6 +73,10 @@ class Piece(pygame.sprite.Sprite):
             self.row = row
             self.board.matrix = [row[:] for row in matrix]
         self.board.match.cont = cont
+        self.board.match.passant_white = passant_white
+        self.board.match.passant_black = passant_black
+        if self.name.lower() in 'kr':
+            self.moved = moved
         
     # calcula os movimentos possiveis e os coloca em self.moves
     def possible_moves(self, check: bool) -> None:
