@@ -42,7 +42,7 @@ class Board():
                             King('E8', False), Bishop('F8', False), Knight('G8', False), Rook('H8', False)]
                           ]
         else:
-            # falta implementação
+            # falta implementaï¿½ï¿½o
             pass
         self.__insert_pieces()
 
@@ -51,7 +51,12 @@ class Board():
             return self.matrix[pos[0]][pos[1]]
         else:
             return None
-    
+
+
+    def get_pieces(self, is_white: bool) -> list[Piece]:
+        return self.white if is_white else self.black
+
+
     def get_position(self, piece: Type[Piece]) -> tuple[int, int]:
         for i in range(self.linhas):
             for j in range(self.colunas):
