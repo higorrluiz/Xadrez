@@ -33,7 +33,6 @@ def ai_move(board, is_white):
 
 
 def minimaxRoot(depth, board, is_maximizing):
-    # possibleMoves = board.legal_moves  pegar todos os movimentos do jogador
     bestMove = 9999
     bestMoveFinal = None
     possible_moves = player_moves(board, is_maximizing)
@@ -41,22 +40,17 @@ def minimaxRoot(depth, board, is_maximizing):
         piece = possible_moves[x][0]
         move = possible_moves[x][1]
         this_move = [piece, move]
-        # Salva tabuleiro atual
         matrix = [row[:] for row in board.matrix]
         white = board.white[:]
         black = board.black[:]
-        # Salva sua peça atual
         column = piece.get_column()
         row = piece.get_row()
-        # Salva peça alvo do movimento
         peca_atacada = board.get_piece(move)
         if peca_atacada is not None:
             board._Board__delete_piece(move)
         piece.row = move[0]
         piece.column = move[1]
-        # import ipdb; ipdb.set_trace()
         value = min(bestMove, minimax(depth - 1, board, -10000, 10000, not is_maximizing))
-        # reposiciona sua peca
         piece.column = column
         if peca_atacada is not None:
             peca_atacada.row = move[0]
@@ -66,13 +60,9 @@ def minimaxRoot(depth, board, is_maximizing):
         board.white = white
         board.black = black
         board.matrix = matrix
-
-        # reposiciona peça alvo
-        print(value, bestMove, (value < bestMove))
         if (value < bestMove):
             bestMove = value
             bestMoveFinal = this_move
-            print(this_move)
     return bestMoveFinal
 
 
@@ -87,18 +77,14 @@ def minimax(depth, board, alpha, beta, is_maximizing):
         for x in range(len(possible_moves)):
             piece = possible_moves[x][0]
             move = possible_moves[x][1]
-            # Salva tabuleiro atual
             matrix = [row[:] for row in board.matrix]
             white = board.white[:]
             black = board.black[:]
-            # Salva sua peça atual
             column = piece.get_column()
             row = piece.get_row()
-            # Salva peça alvo do movimento
             peca_atacada = board.get_piece(move)
             piece.row = move[0]
             piece.column = move[1]
-            # import ipdb; ipdb.set_trace()
             bestMove = min(bestMove, minimax(depth - 1, board, alpha, beta, not is_maximizing))
             piece.column = column
             if peca_atacada is not None:
@@ -118,19 +104,14 @@ def minimax(depth, board, alpha, beta, is_maximizing):
         for x in range(len(possible_moves)):
             piece = possible_moves[x][0]
             move = possible_moves[x][1]
-            # Salva tabuleiro atual
             matrix = [row[:] for row in board.matrix]
             white = board.white[:]
             black = board.black[:]
-            # Salva sua peça atual
             column = piece.get_column()
             row = piece.get_row()
-            # Salva peça alvo do movimento
             peca_atacada = board.get_piece(move)
-            
             piece.row = move[0]
             piece.column = move[1]
-            # import ipdb; ipdb.set_trace()
             bestMove = max(bestMove, minimax(depth - 1, board, alpha, beta, not is_maximizing))
             piece.column = column
             if peca_atacada is not None:
@@ -150,8 +131,6 @@ def minimax(depth, board, alpha, beta, is_maximizing):
 def evaluation(board):
     white_eval = get_white_player_eval(board)
     black_eval = get_black_player_eval(board)
-    print(white_eval - black_eval)
-    board.printa()
     return white_eval - black_eval
 
 
@@ -172,7 +151,7 @@ def get_white_player_eval(board):
         if isinstance(piece, Queen):
             eval = eval + 90 + EVAL.queen[piece_row][piece_col]
         if isinstance(piece, King):
-            eval = eval + 900 + EVAL.white_king[piece_row][piece_col] #value = value if (board.piece_at(place)).color else -value    
+            eval = eval + 900 + EVAL.white_king[piece_row][piece_col]
     return eval
 
 
@@ -193,5 +172,4 @@ def get_black_player_eval(board):
         if isinstance(piece, Queen):
             eval = eval + 90 + EVAL.queen[piece_row][piece_col]
         if isinstance(piece, King):
-            eval = eval + 900 + EVAL.black_king[piece_row][piece_col] #value = value if (board.piece_at(place)).color else -value    
-    return eval
+            eval = eval + 900 + EVAL.black_king[piece_row][piece_col]

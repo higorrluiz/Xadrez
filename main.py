@@ -85,18 +85,16 @@ while game_loop:
                                 jogo.passant_white = None
                             white_turn = not white_turn
                             change = True
-                            # tabuleiro.printa()
+
             if show_possible_moves:
                 for (x, y) in movimentos_validos:
                     pygame.draw.circle(tela, (207,14,14), (x+tamanho/2, y+tamanho/2), 10)
             selecionado(sel_x, sel_y)
         else:
             peca, move = ai.minimaxRoot(3, tabuleiro, False)
-            print("a peca escolhida foi", peca, "e foi para", move)
+
             tabuleiro.printa()
-            # import ipdb; ipdb.set_trace()
             peca.move(move)
-            print("JOGADA MERDA HEIN", ai.evaluation(tabuleiro))
 
             white_turn = not white_turn
             pecas = tabuleiro.get_pieces(white_turn)
