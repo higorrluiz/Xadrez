@@ -104,14 +104,17 @@ def minimax(depth, board, alpha, beta, is_maximizing):
         for x in range(len(possible_moves)):
             piece = possible_moves[x][0]
             move = possible_moves[x][1]
+
             matrix = [row[:] for row in board.matrix]
             white = board.white[:]
             black = board.black[:]
+
             column = piece.get_column()
             row = piece.get_row()
             peca_atacada = board.get_piece(move)
             piece.row = move[0]
             piece.column = move[1]
+
             bestMove = max(bestMove, minimax(depth - 1, board, alpha, beta, not is_maximizing))
             piece.column = column
             if peca_atacada is not None:
@@ -173,3 +176,4 @@ def get_black_player_eval(board):
             eval = eval + 90 + EVAL.queen[piece_row][piece_col]
         if isinstance(piece, King):
             eval = eval + 900 + EVAL.black_king[piece_row][piece_col]
+    return eval
