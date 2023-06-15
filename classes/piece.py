@@ -56,7 +56,6 @@ class Piece(pygame.sprite.Sprite):
         white = self.board.white[:]
         black = self.board.black[:]
         matrix = [row[:] for row in self.board.matrix]
-        cont = self.board.match.cont
         passant_white = self.board.match.passant_white
         passant_black = self.board.match.passant_black
         if self.name.lower() in 'kr':
@@ -74,7 +73,6 @@ class Piece(pygame.sprite.Sprite):
             self.column = column
             self.row = row
             self.board.matrix = [row[:] for row in matrix]
-        self.board.match.cont = cont
         self.board.white = white[:]
         self.board.black = black[:]
         self.board.match.passant_white = passant_white
@@ -87,7 +85,7 @@ class Piece(pygame.sprite.Sprite):
         pass
 
     def move(self, pos: tuple[int, int], mock: bool = False) -> None:
-        self.board.match.increment_cont()
+        if not mock: self.board.match.increment_cont()
         self.board.move_piece(self.get_pos(), pos, mock=mock)
         self.column = pos[1]
         self.row = pos[0]

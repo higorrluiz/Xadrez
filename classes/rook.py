@@ -72,4 +72,3 @@ class Rook(Piece):
     def move(self, pos: tuple[int, int], mock: bool = False) -> None:
         self.moved = True
         super().move(pos, mock)
-        pass

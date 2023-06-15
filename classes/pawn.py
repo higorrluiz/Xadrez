@@ -104,4 +104,4 @@ class Pawn(Piece):
                 else:
                     self.board.match.passant_black = self
             super().move(pos, mock)
-        self.board.match.set_cont_zero()
+        if not mock: self.board.match.set_cont_zero()
