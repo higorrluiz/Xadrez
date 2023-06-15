@@ -13,6 +13,8 @@ x, y = 0, 0
 peca: Piece = Piece()
 white_turn = True
 check = False
+has_ia = True
+player_is_white = True
 movimentos_validos = []
 
 game_loop = True
@@ -44,7 +46,7 @@ while game_loop:
             mouse_pos = pygame.mouse.get_pos()
 
             if (event.type == botao_exit) or (event.type == QUIT):
-                tabuleiro.save_state('assets/state.txt')
+                tabuleiro.save_state('assets/state.txt', white_turn, check, show_possible_moves, has_ia, player_is_white)
                 pygame.quit()
                 exit()
 

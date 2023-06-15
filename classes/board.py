@@ -46,9 +46,36 @@ class Board():
             pass
         self.__insert_pieces()
 
-    def save_state(self, arq: str) -> None:
+    def save_state(self, arq: str, turn: bool, check: bool, show: bool, ia: bool, player: bool) -> None:
+        moved_list = []
         handle = open(arq, 'w')
-        handle.write('Ola, mundo!')
+        for i in range(self.linhas):  # 0 - 7
+            for j in range(self.colunas):
+                piece: Piece = self.get_piece((i, j))
+                if piece is None: 
+                    handle.write('-')
+                else:
+                    handle.write(piece.name.lower() if piece.is_white else piece.name.upper())
+                    if isinstance(piece, Rook) or isinstance(piece, King): moved_list.append(piece.moved)
+            handle.write('\n')
+        for moved in moved_list:  # 8
+            handle.write('T' if moved else 'F')
+        handle.write('\n')
+        passant: list[Piece] = [self.match.passant_white, self.match.passant_black]
+        for p in passant:  # 9
+            if p is not None:
+                pos = p.get_pos()
+                handle.write(f'{pos[0]}{pos[1]}')
+            else: 
+                handle.write('--')
+        handle.write('\n')
+        handle.write(f'{self.match.cont}')  # 10
+        handle.write('\n')
+        handle.write('T' if turn else 'F')  # 11
+        handle.write('T' if check else 'F')
+        handle.write('T' if show else 'F')
+        handle.write('T' if ia else 'F')
+        handle.write('T' if player else 'F')
         handle.close()
 
     def get_piece(self, pos: tuple[int, int]) -> Type[Piece]:

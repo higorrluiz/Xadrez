@@ -25,10 +25,10 @@ class Piece(pygame.sprite.Sprite):
             self.column = COLUNAS[pos[0].upper()]  # coluna (A-G) -> (0-7)
 
         self.board = None
-        self.selecionado = False
+        self.selecionado: bool = False
         self.image: pygame.image = None
         self.rect: pygame.Rect = None
-        self.name = None
+        self.name: str = None
         self.moves = []
     
     def get_is_white(self) -> bool:
