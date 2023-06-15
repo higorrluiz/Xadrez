@@ -61,10 +61,8 @@ class ChessPlayer():
             piece.column = move[1]
             if self.color:
                 value = max(best_move, self.__minimax(self.depth - 1, self.board, -10000, 10000, not self.color))
-                print(value, "VALUE <--------------------------")
             else:
                 value = min(best_move, self.__minimax(self.depth - 1, self.board, -10000, 10000, not self.color))
-                print(value, "VALUE <--------------------------")
             piece.column = column
             piece.row = row
             if peca_atacada is not None:
@@ -74,11 +72,9 @@ class ChessPlayer():
             self.board.white = white
             self.board.black = black
             self.board.matrix = matrix
-            print(value, best_move, "VALUEUEUEUEUEUEUE <--------------------------")
             if (value < best_move):
                 best_move = value
                 bestMoveFinal = this_move
-                print(bestMoveFinal, "valorzinhunhunhunhuhnu<-------------------------")
         self.next_move = bestMoveFinal
 
     def __minimax(self, depth, board, alpha, beta, is_maximizing):
@@ -129,7 +125,6 @@ class ChessPlayer():
     def __evaluation(self):
         white_eval = self.__get_white_player_eval()
         black_eval = self.__get_black_player_eval()
-        print(white_eval - black_eval)
         return white_eval - black_eval
 
     def __get_white_player_eval(self):
