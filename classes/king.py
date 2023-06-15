@@ -9,7 +9,8 @@ class King(Piece):
     def __init__(self, pos: str, is_white: bool, moved: bool = False) -> None:
         super().__init__(pos, is_white)
         self.image = pygame.transform.scale(
-            pygame.image.load('assets/images/white king.png') if is_white else pygame.image.load('assets/images/black king.png'),
+            pygame.image.load('assets/images/white king.png') if is_white else 
+            pygame.image.load('assets/images/black king.png'),
             (68, 68)
         )
         self.rect = self.image.get_rect(topleft=POSICOES_TABULEIRO[pos])

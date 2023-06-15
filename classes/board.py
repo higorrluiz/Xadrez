@@ -12,7 +12,7 @@ from importador import *
 
 class Board():
 
-    def __init__(self, tela: pygame.Surface, tam: float, state: str = None) -> None:
+    def __init__(self, tela: pygame.Surface, tam: float, arq: str = None) -> None:
         self.match = None
 
         self.linhas = 8
@@ -26,7 +26,7 @@ class Board():
         self.black_group = pygame.sprite.Group()
 
         self.matrix = []
-        if state is None:
+        if arq is None:
             # primeira linha da matriz corresponde a linha 1 do tabuleiro (a linha de baixo)
             self.matrix = [[Rook('A1', True), Knight('B1', True), Bishop('C1', True), Queen('D1', True),
                             King('E1', True), Bishop('F1', True), Knight('G1', True), Rook('H1', True)],
@@ -45,6 +45,11 @@ class Board():
             # falta implementação
             pass
         self.__insert_pieces()
+
+    def save_state(self, arq: str) -> None:
+        handle = open(arq, 'w')
+        handle.write('Ola, mundo!')
+        handle.close()
 
     def get_piece(self, pos: tuple[int, int]) -> Type[Piece]:
         if 0 <= pos[0] <= 7 and 0 <= pos[1] <= 7:
