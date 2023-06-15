@@ -6,23 +6,10 @@ from classes.match import Match
 from board_helper import *
 from menu import Menu
 
-jogo: Match = Match(tabuleiro)
-
-sel_x, sel_y = 20000, 30000
-x, y = 0, 0
-peca: Piece = Piece()
-white_turn = True
-check = False
-movimentos_validos = []
-
 game_loop = True
 game_state = "menu"
 menu = Menu(tela, game_loop, game_state)
 show_possible_moves = True
-
-pecas = tabuleiro.get_pieces(white_turn)
-for p in pecas:
-    p.possible_moves(check)
 
 while game_loop:
     tela.fill('black')
@@ -30,6 +17,22 @@ while game_loop:
         game_loop, game_state = menu.draw()
     elif game_state == "options":
         show_possible_moves, game_state = menu.options(show_possible_moves)
+    elif game_state == "checkmate":
+        game_loop, game_state = menu.checkmate(winner)
+    elif game_state == "new_game":
+        tabuleiro: Board = Board(tela, tamanho)
+        jogo: Match = Match(tabuleiro)
+        sel_x, sel_y = 20000, 30000
+        x, y = 0, 0
+        peca: Piece = Piece()
+        white_turn = True
+        check = False
+        movimentos_validos = []
+        pecas = tabuleiro.get_pieces(white_turn)
+        for p in pecas:
+            p.possible_moves(check)
+        game_state = "game"
+
     elif game_state == "game":
         tabuleiro.desenhar_tabuleiro()
 
@@ -83,7 +86,9 @@ while game_loop:
                             p.possible_moves(check)
                             
                         if jogo.is_checkmate(white_turn, check):
-                            # tela de fim de jogo: xeque-mate
+                            game_state = "checkmate"
+                            menu.game_state = game_state
+                            winner = "black" if white_turn else "white"
                             pass
                         # tabuleiro.printa()
                         
