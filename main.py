@@ -7,7 +7,7 @@ from classes.rook import Rook
 from classes.match import Match
 from board_helper import *
 from menu import Menu
-import ai
+from ai import ChessPlayer
 import evaluation as eval
 
 jogo: Match = Match(tabuleiro)
@@ -24,6 +24,8 @@ game_loop = True
 game_state = "menu"
 menu = Menu(tela, game_loop, game_state)
 show_possible_moves = True
+
+ai_player = ChessPlayer(False,jogo,tabuleiro,1)
 
 while game_loop:
     tela.fill('black')
@@ -72,7 +74,6 @@ while game_loop:
                     if peca.selecionado == True and not (peca.rect.collidepoint(mouse_pos)):
                         x, y = posicao_do_quadrado()
                         sel_x, sel_y = mouse_pos[0], mouse_pos[1]
-                    
                         if (x, y) in movimentos_validos:
                             peca.rect.x = x
                             peca.rect.y = y
@@ -85,20 +86,30 @@ while game_loop:
                                 jogo.passant_white = None
                             white_turn = not white_turn
                             change = True
+                            tabuleiro.desenhar_tabuleiro()
+                            tabuleiro.black_group.draw(tela)
+                            tabuleiro.black_group.update()
+                            tabuleiro.white_group.draw(tela)
+                            tabuleiro.white_group.update()
 
             if show_possible_moves:
                 for (x, y) in movimentos_validos:
                     pygame.draw.circle(tela, (207,14,14), (x+tamanho/2, y+tamanho/2), 10)
             selecionado(sel_x, sel_y)
         else:
-            peca, move = ai.minimaxRoot(3, tabuleiro, False)
+            if ai_player.color == white_turn:
+                ai_player.set_next_move()
+                peca, move = ai_player.next_move
+                
+                # peca, move = ai.minimaxRoot(3, tabuleiro, False)
+                peca.move(move)
+                print("tabuleiro após")
+                tabuleiro.printa()
 
-            tabuleiro.printa()
-            peca.move(move)
 
-            white_turn = not white_turn
-            pecas = tabuleiro.get_pieces(white_turn)
-            change = True
+                white_turn = not white_turn
+                pecas = tabuleiro.get_pieces(white_turn)
+                change = True
     pygame.display.flip()
 
     # Setting FPS
