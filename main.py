@@ -2,8 +2,6 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from classes.piece import Piece
-from classes.king import King
-from classes.rook import Rook
 from classes.match import Match
 from board_helper import *
 from menu import Menu
@@ -14,14 +12,17 @@ sel_x, sel_y = 20000, 30000
 x, y = 0, 0
 peca: Piece = Piece()
 white_turn = True
-change = True
+check = False
 movimentos_validos = []
-
 
 game_loop = True
 game_state = "menu"
 menu = Menu(tela, game_loop, game_state)
 show_possible_moves = True
+
+pecas = tabuleiro.get_pieces(white_turn)
+for p in pecas:
+    p.possible_moves(check)
 
 while game_loop:
     tela.fill('black')
@@ -36,13 +37,6 @@ while game_loop:
         tabuleiro.black_group.update()
         tabuleiro.white_group.draw(tela)
         tabuleiro.white_group.update()
-
-        if change:
-            p: Piece
-            pecas = tabuleiro.white if white_turn else tabuleiro.black
-            for p in pecas:
-                p.possible_moves()
-            change = False
 
         pygame.event.set_blocked(pygame.MOUSEMOTION)
         for event in pygame.event.get():
@@ -74,6 +68,7 @@ while game_loop:
                         peca.rect.x = x
                         peca.rect.y = y
                         peca.move((7-round(y/tamanho), round(x/tamanho)))
+                        
                         peca.selecionado = False
                         movimentos_validos = []
                         if white_turn:
@@ -81,8 +76,17 @@ while game_loop:
                         else:
                             jogo.passant_white = None
                         white_turn = not white_turn
-                        change = True
+                        
+                        check = jogo.king_is_checked(white_turn)
+                        pecas = tabuleiro.get_pieces(white_turn)
+                        for p in pecas:
+                            p.possible_moves(check)
+                            
+                        if jogo.is_checkmate(white_turn, check):
+                            # tela de fim de jogo: xeque-mate
+                            pass
                         # tabuleiro.printa()
+                        
         if show_possible_moves:
             for (x, y) in movimentos_validos:
                 pygame.draw.circle(tela, (207,14,14), (x+tamanho/2, y+tamanho/2), 10)

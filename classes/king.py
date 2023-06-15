@@ -19,7 +19,20 @@ class King(Piece):
     def get_moved(self) -> bool:
         return self.moved
     
-    def possible_moves(self) -> None:
+    def __verify_castle(self, linha: int, step: int) -> None:
+        moved = self.moved
+        self.move((linha, 4 + step))
+        if not self.board.match.king_is_checked(self.is_white):
+            self.move((linha, 4 + 2*step))
+            if not self.board.match.king_is_checked(self.is_white):
+                self.moves.append((linha, 4 + 2*step))  # movimento
+            self.move((linha, 4 + step))
+            self.move((linha, 4))
+        else:
+            self.move((linha, 4))
+        self.moved = moved
+    
+    def possible_moves(self, check: bool) -> None:
         # limpa a lista de movimentos e pega a posicao da peca
         self.moves = []
         linha, coluna = self.get_pos()
@@ -85,29 +98,26 @@ class King(Piece):
             aux_linha >= 0 and aux_coluna <= 7):
             self.moves.append((aux_linha, aux_coluna))
 
-        # falta considerar cheque nos movimentos básicos
+        # para o movimento do rei, sempre devem ser feitas todas as verificacoes
+        self.verify_moves(True)
 
-        if not self.moved:
+        if not self.moved and not check:
             # roque maior
             p1: Piece = self.board.get_piece((linha, 1))
             p2: Piece = self.board.get_piece((linha, 2))
             p3: Piece = self.board.get_piece((linha, 3))
             rook: Piece = self.board.get_piece((linha, 0))
-            if (p1 is None and p2 is None and p3 is None and isinstance(rook, Rook) and 
-                rook.get_is_white() == self.is_white and not rook.get_moved()):
-                # falta considerar cheque no roque maior
-                self.moves.append((linha, 2))
+            if (p1 is None and p2 is None and p3 is None and isinstance(rook, Rook) and not rook.get_moved()):
+                self.__verify_castle(linha, -1)
 
             # roque menor
             p1 = self.board.get_piece((linha, 5))
             p2 = self.board.get_piece((linha, 6))
             rook = self.board.get_piece((linha, 7))
-            if (p1 is None and p2 is None and isinstance(rook, Rook) and 
-                rook.get_is_white() == self.is_white and not rook.get_moved()):
-                # falta considerar cheque no roque menor
-                self.moves.append((linha, 6))
+            if (p1 is None and p2 is None and isinstance(rook, Rook) and not rook.get_moved()):
+                self.__verify_castle(linha, 1)
 
-    def move(self, pos: tuple[int, int]) -> None:
+    def move(self, pos: tuple[int, int], mock: bool = False) -> None:
         self.moved = True
         column = self.get_column()
         # verifica se eh roque
@@ -121,9 +131,9 @@ class King(Piece):
                 rook: Rook = self.board.get_piece((pos[0], 7))
                 rook_column = 5
             else:
-                raise Exception("Invalid movement!")
-            super().move(pos)
-            self.board.match.decrement_cont()
-            rook.move((pos[0], rook_column))
+                raise Exception("Invalid king movement!")
+            super().move(pos, mock)
+            if not mock: self.board.match.decrement_cont()
+            rook.move((pos[0], rook_column), mock)
         else:
-            super().move(pos)
+            super().move(pos, mock)
