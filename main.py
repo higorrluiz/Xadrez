@@ -25,7 +25,7 @@ game_state = "menu"
 menu = Menu(tela, game_loop, game_state)
 show_possible_moves = True
 
-ai_player = ChessPlayer(False,jogo,tabuleiro,1)
+ai_player = ChessPlayer(False,jogo,tabuleiro,4)
 
 while game_loop:
     tela.fill('black')
