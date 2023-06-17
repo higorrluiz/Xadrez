@@ -18,7 +18,7 @@ class Rook(Piece):
     def get_moved(self) -> bool:
         return self.moved
     
-    def possible_moves(self) -> None:
+    def possible_moves(self, check: bool) -> None:
         # limpa a lista de movimentos e pega a posicao da peca
         self.moves = []
         linha, coluna = self.get_pos()
@@ -67,7 +67,8 @@ class Rook(Piece):
         if piece is not None and piece.is_white != self.is_white:
             self.moves.append((aux_linha, aux_coluna))
 
-    def move(self, pos: tuple[int, int]) -> None:
+        self.verify_moves(check)
+
+    def move(self, pos: tuple[int, int], mock: bool = False) -> None:
         self.moved = True
-        super().move(pos)
-        pass
+        super().move(pos, mock)
