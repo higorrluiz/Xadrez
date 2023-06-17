@@ -19,6 +19,8 @@ while game_loop:
         show_possible_moves, game_state = menu.options(show_possible_moves)
     elif game_state == "checkmate":
         game_loop, game_state = menu.checkmate(winner)
+    elif game_state == "tie":
+        game_loop, game_state = menu.tie()
     elif game_state == "new_game":
         tabuleiro: Board = Board(tela, tamanho)
         jogo: Match = Match(tabuleiro)
@@ -88,8 +90,9 @@ while game_loop:
                             menu.game_state = game_state
                             winner = "black" if white_turn else "white"
 
-                        if jogo.is_draw(white_turn, check):
-                            pass
+                        if jogo.is_tie(white_turn, check):
+                            game_state = "tie"
+                            menu.game_state = game_state
                         # tabuleiro.printa()
                         
         if show_possible_moves:

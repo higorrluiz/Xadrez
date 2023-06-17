@@ -274,7 +274,7 @@ class Match:
                     return True
         return False
 
-    def is_draw(self, is_white: bool, check: bool) -> bool:
+    def is_tie(self, is_white: bool, check: bool) -> bool:
         if self.cont == 50: return True  # checa regra dos 50 movimentos
         if self._is_stalemate(is_white, check): return True
         if self._insufficient_material(): return True
