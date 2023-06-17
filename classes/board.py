@@ -109,7 +109,6 @@ class Board():
             self.__delete_piece(pos_new, mock)
         self.matrix[pos_new[0]][pos_new[1]] = piece
         if passant:
-            self.match.set_cont_zero()
             aux = 1 if piece.is_white else -1
             self.__delete_piece((pos_new[0]-aux, pos_new[1]), mock)
     

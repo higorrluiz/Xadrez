@@ -19,6 +19,9 @@ class Match:
         self.passant_white: Pawn = None
         # peca preta que pode ser capturada pelo en passant
         self.passant_black: Pawn = None
+
+    def get_cont(self) -> None:
+        return self.cont 
     
     def set_cont_zero(self) -> None:
         self.cont = 0
@@ -270,10 +273,6 @@ class Match:
                 if piece is not None and piece.is_white != king.is_white and isinstance(piece, King):
                     return True
         return False
-
-    # 
-    # metodos de condicao de fim de partida
-    # 
 
     def is_draw(self, is_white: bool, check: bool) -> bool:
         if self.cont == 50: return True  # checa regra dos 50 movimentos
