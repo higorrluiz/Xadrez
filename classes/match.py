@@ -11,14 +11,28 @@ from classes.king import King
 
 class Match:
 
-    def __init__(self, board: Type[Board]) -> None:
+    def __init__(self, board: Type[Board], arq: str = None) -> None:
         board.match = self
         self.board = board
-        self.cont = 0
-        # peca branca que pode ser capturada pelo en passant
-        self.passant_white: Pawn = None
-        # peca preta que pode ser capturada pelo en passant
-        self.passant_black: Pawn = None
+        if arq is None:
+            self.cont = 0
+            # peca branca que pode ser capturada pelo en passant
+            self.passant_white: Pawn = None
+            # peca preta que pode ser capturada pelo en passant
+            self.passant_black: Pawn = None
+        else:
+            handle = open(arq, 'r')
+            linhas = handle.readlines()
+            handle.close()
+
+            passant = linhas[9:10]
+            cont = linhas[10:11]
+
+            if passant[:2] == '--': self.passant_white: Pawn = None
+            else: self.passant_white: Pawn = self.board.get_piece((int(passant[0]), int(passant[1])))
+            if passant[2:] == '--': self.passant_black: Pawn = None
+            else: self.passant_black: Pawn = self.board.get_piece((int(passant[2]), int(passant[3])))
+            self.cont = int(cont)
     
     def get_cont(self) -> int:
         return self.cont

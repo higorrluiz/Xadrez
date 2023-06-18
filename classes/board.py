@@ -42,11 +42,38 @@ class Board():
                             King('E8', False), Bishop('F8', False), Knight('G8', False), Rook('H8', False)]
                           ]
         else:
-            # falta implementação
-            pass
+            handle = open(arq, 'r')
+            linhas = handle.readlines()
+            handle.close()
+
+            matrix = linhas[:8]
+            moved_list = linhas[8:9]
+            
+            piece: Piece
+            index = 0
+            self.matrix = []
+            for i, linha in enumerate(matrix, 1):
+                aux = []
+                for j, char in zip(COLUNAS_STR, linha):
+                    if char == '-': piece = None
+                    else:
+                        is_white = (char == char.lower())
+                        pos = j + str(i)
+                        if char.upper() == 'P': piece = Pawn(pos, is_white)
+                        elif char.upper() == 'N': piece = Knight(pos, is_white)
+                        elif char.upper() == 'B': piece = Bishop(pos, is_white)
+                        elif char.upper() == 'Q': piece = Queen(pos, is_white)
+                        else:
+                            moved = (moved_list[index].upper() == 'T')
+                            index += 1
+                            if char.upper() == 'R': piece = Rook(pos, is_white, moved)
+                            else: piece = King(pos, is_white, moved)  # char.upper() == 'K'
+                    aux.append(piece)
+                self.matrix.append(aux)
+                
         self.__insert_pieces()
 
-    def save_state(self, arq: str, turn: bool, check: bool, show: bool, ia: bool, player: bool) -> None:
+    def save_state(self, arq: str, config: tuple[bool, bool, bool, bool, bool]) -> None:
         moved_list = []
         handle = open(arq, 'w')
         for i in range(self.linhas):  # 0 - 7
@@ -71,11 +98,7 @@ class Board():
         handle.write('\n')
         handle.write(f'{self.match.cont}')  # 10
         handle.write('\n')
-        handle.write('T' if turn else 'F')  # 11
-        handle.write('T' if check else 'F')
-        handle.write('T' if show else 'F')
-        handle.write('T' if ia else 'F')
-        handle.write('T' if player else 'F')
+        for value in config: handle.write('T' if value else 'F')  # 11
         handle.close()
 
     def get_piece(self, pos: tuple[int, int]) -> Type[Piece]:

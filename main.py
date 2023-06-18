@@ -46,7 +46,7 @@ while game_loop:
             mouse_pos = pygame.mouse.get_pos()
 
             if (event.type == botao_exit) or (event.type == QUIT):
-                tabuleiro.save_state('assets/state.txt', white_turn, check, show_possible_moves, has_ia, player_is_white)
+                tabuleiro.save_state('assets/state.txt', (white_turn, check, show_possible_moves, has_ia, player_is_white))
                 pygame.quit()
                 exit()
 
