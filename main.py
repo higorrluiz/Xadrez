@@ -5,8 +5,7 @@ from classes.piece import Piece
 from classes.match import Match
 from board_helper import *
 from menu import Menu
-
-STATE_PATH = "assets/state.txt"
+from importador import STATE_PATH
 
 
 def get_config(arq: str) -> list[bool]:
@@ -35,7 +34,23 @@ while game_loop:
         show_possible_moves, game_state = menu.options(show_possible_moves)
     elif game_state == "checkmate":
         game_loop, game_state = menu.checkmate(winner)
+    elif game_state == "continue_game":
+        tabuleiro: Board = Board(tela, tamanho, STATE_PATH)
+        jogo: Match = Match(tabuleiro, STATE_PATH)
+        sel_x, sel_y = 20000, 30000
+        x, y = 0, 0
+        peca: Piece = Piece()
+        white_turn, check, show_possible_moves, has_ia, player_is_white = get_config(STATE_PATH)
+        movimentos_validos = []
+        pecas = tabuleiro.get_pieces(white_turn)
+        for p in pecas:
+            p.possible_moves(check)
+        game_state = "game"
+        
     elif game_state == "new_game":
+        # deleta estado salvo
+        open(STATE_PATH, 'w').close()
+
         tabuleiro: Board = Board(tela, tamanho)
         jogo: Match = Match(tabuleiro)
         sel_x, sel_y = 20000, 30000
