@@ -25,8 +25,8 @@ class Match:
             linhas = handle.readlines()
             handle.close()
 
-            passant = linhas[9:10]
-            cont = linhas[10:11]
+            passant = linhas[9:10][0].strip()
+            cont = linhas[10:11][0].strip()
 
             if passant[:2] == '--': self.passant_white: Pawn = None
             else: self.passant_white: Pawn = self.board.get_piece((int(passant[0]), int(passant[1])))

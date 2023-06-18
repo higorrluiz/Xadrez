@@ -46,8 +46,8 @@ class Board():
             linhas = handle.readlines()
             handle.close()
 
-            matrix = linhas[:8]
-            moved_list = linhas[8:9]
+            matrix = [linha.strip() for linha in linhas[:8]]
+            moved_string = linhas[8:9][0].strip()
             
             piece: Piece
             index = 0
@@ -64,7 +64,7 @@ class Board():
                         elif char.upper() == 'B': piece = Bishop(pos, is_white)
                         elif char.upper() == 'Q': piece = Queen(pos, is_white)
                         else:
-                            moved = (moved_list[index].upper() == 'T')
+                            moved = (moved_string[index].upper() == 'T')
                             index += 1
                             if char.upper() == 'R': piece = Rook(pos, is_white, moved)
                             else: piece = King(pos, is_white, moved)  # char.upper() == 'K'
@@ -73,7 +73,7 @@ class Board():
                 
         self.__insert_pieces()
 
-    def save_state(self, arq: str, config: tuple[bool, bool, bool, bool, bool]) -> None:
+    def save_state(self, arq: str, config: list[bool]) -> None:
         moved_list = []
         handle = open(arq, 'w')
         for i in range(self.linhas):  # 0 - 7

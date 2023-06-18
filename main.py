@@ -6,6 +6,22 @@ from classes.match import Match
 from board_helper import *
 from menu import Menu
 
+STATE_PATH = "assets/state.txt"
+
+
+def get_config(arq: str) -> list[bool]:
+    handle = open(arq, 'r')
+    linhas = handle.readlines()
+    handle.close()
+
+    config = linhas[11:12][0].strip()
+    config = [(char == 'T') for char in config]
+
+    # deleta estado retomado
+    open(arq, 'w').close()
+    return config
+
+
 game_loop = True
 game_state = "menu"
 menu = Menu(tela, game_loop, game_state)
@@ -49,7 +65,7 @@ while game_loop:
             mouse_pos = pygame.mouse.get_pos()
 
             if (event.type == botao_exit) or (event.type == QUIT):
-                tabuleiro.save_state('assets/state.txt', (white_turn, check, show_possible_moves, has_ia, player_is_white))
+                tabuleiro.save_state(STATE_PATH, [white_turn, check, show_possible_moves, has_ia, player_is_white])
                 pygame.quit()
                 exit()
 
