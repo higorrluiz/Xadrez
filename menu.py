@@ -16,7 +16,7 @@ class Menu:
         self.button_height = self.tela.get_height() // 10
         self.button_x = self.tela.get_width() // 2 - self.button_width // 2
         self.button_y = self.tela.get_height() // 2 - self.button_height // 2
-        if self.saved_state: self.botao_continue = pygame.image.load(ASSETS_PATH + "play_button.png")
+        if self.saved_state: self.botao_continue = pygame.image.load(ASSETS_PATH + "continue_button.png")
         self.botao_play = pygame.image.load(ASSETS_PATH + "play_button.png")
         self.botao_exit = pygame.image.load(ASSETS_PATH + "exit_button.jpg")
         self.botao_options = pygame.image.load(ASSETS_PATH + "options_button.png")
@@ -104,6 +104,7 @@ class Menu:
         return show_possible_moves, self.game_state
     
     def checkmate(self, color):
+        self.saved_state = False
         self.tela.blit(self.background, (0, 0))
         fonte = pygame.font.SysFont('Arial', self.tela.get_height() // 20)
         texto_xeque = fonte.render('XEQUE-MATE', True, (0, 0, 0))
