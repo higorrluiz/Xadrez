@@ -87,8 +87,7 @@ class Pawn(Piece):
 
         self.verify_moves(check)
 
-    def move(self, pos: tuple[int, int], mock: bool = False) -> bool:
-        promotion = False
+    def move(self, pos: tuple[int, int], mock: bool = False) -> None:
         column = self.get_column()
         piece = self.board.get_piece(pos)
         # verifica se eh en passant
@@ -105,7 +104,4 @@ class Pawn(Piece):
                 else:
                     self.board.match.passant_black = self
             super().move(pos, mock)
-            if pos [0] == 0 or pos[0] == 7 and not mock:
-                promotion = True
         if not mock: self.board.match.set_cont_zero()
-        return promotion

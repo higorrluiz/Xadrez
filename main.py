@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from classes.piece import Piece
+from classes.pawn import Pawn
 from classes.match import Match
 from board_helper import *
 from menu import Menu
@@ -70,7 +71,7 @@ while game_loop:
                     sel_x, sel_y = mouse_pos[0], mouse_pos[1]
                 
                     if (x, y) in movimentos_validos:
-                        promotion = peca.move((7-round(y/tamanho), round(x/tamanho)))
+                        peca.move((7-round(y/tamanho), round(x/tamanho)))
                         
                         peca.selecionado = False
                         movimentos_validos = []
@@ -79,9 +80,8 @@ while game_loop:
                         else:
                             jogo.passant_white = None
 
-                        if promotion:
+                        if isinstance(peca, Pawn) and peca.get_row() in [0, 7]: 
                             menu.promotion(peca, white_turn)
-                            promotion = False
                         
                         white_turn = not white_turn
                         
