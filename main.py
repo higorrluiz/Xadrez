@@ -19,6 +19,8 @@ while game_loop:
         show_possible_moves, game_state = menu.options(show_possible_moves)
     elif game_state == "checkmate":
         game_loop, game_state = menu.checkmate(winner)
+    elif game_state == "tie":
+        game_loop, game_state = menu.tie()
     elif game_state == "new_game":
         tabuleiro: Board = Board(tela, tamanho)
         jogo: Match = Match(tabuleiro)
@@ -52,7 +54,7 @@ while game_loop:
 
             # permite selecao nas pecas pretas
             if event.type == pygame.MOUSEBUTTONUP:
-
+                p: Piece
                 for p in pecas:  # checa se o mouse cliclou em um peca
                     if p.rect.collidepoint(mouse_pos):
                         sel_x, sel_y = mouse_pos[0], mouse_pos[1]
@@ -68,8 +70,6 @@ while game_loop:
                     sel_x, sel_y = mouse_pos[0], mouse_pos[1]
                 
                     if (x, y) in movimentos_validos:
-                        peca.rect.x = x
-                        peca.rect.y = y
                         peca.move((7-round(y/tamanho), round(x/tamanho)))
                         
                         peca.selecionado = False
@@ -89,7 +89,10 @@ while game_loop:
                             game_state = "checkmate"
                             menu.game_state = game_state
                             winner = "black" if white_turn else "white"
-                            pass
+
+                        if jogo.is_tie(white_turn, check):
+                            game_state = "tie"
+                            menu.game_state = game_state
                         # tabuleiro.printa()
                         
         if show_possible_moves:
