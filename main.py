@@ -107,7 +107,7 @@ while game_loop:
     elif game_state == "new_game":
         tabuleiro: Board = Board(tela, tamanho)
         jogo: Match = Match(tabuleiro)
-        sel_x, sel_y = 20000, 30000
+        sel = (20000, 30000)
         peca: Piece = Piece()
         white_turn = True
         check = False
@@ -133,7 +133,7 @@ while game_loop:
                 peca, move = ai_player.next_move
                 # peca, move = ai.minimaxRoot(3, tabuleiro, False)
                 peca.move(move)
-                white_turn, pecas = end_turn(jogo, tabuleiro, white_turn)
+                white_turn, pecas, game_state, winner = end_turn(game_state, jogo, tabuleiro, white_turn)
 
     pygame.display.flip()
 
