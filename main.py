@@ -70,7 +70,7 @@ while game_loop:
                     sel_x, sel_y = mouse_pos[0], mouse_pos[1]
                 
                     if (x, y) in movimentos_validos:
-                        peca.move((7-round(y/tamanho), round(x/tamanho)))
+                        promotion = peca.move((7-round(y/tamanho), round(x/tamanho)))
                         
                         peca.selecionado = False
                         movimentos_validos = []
@@ -78,6 +78,11 @@ while game_loop:
                             jogo.passant_black = None
                         else:
                             jogo.passant_white = None
+
+                        if promotion:
+                            menu.promotion(peca, white_turn)
+                            promotion = False
+                        
                         white_turn = not white_turn
                         
                         check = jogo.king_is_checked(white_turn)
