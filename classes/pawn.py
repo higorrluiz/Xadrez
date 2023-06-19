@@ -15,7 +15,7 @@ class Pawn(Piece):
         self.name = 'p'
 
     def promote(self, piece: Type[Piece]) -> None:
-        self.board.promotion(piece, self.get_position())
+        self.board.promotion(piece, self.get_pos())
     
     def possible_moves(self, check: bool) -> None:
         # limpa a lista de movimentos e pega a posicao da peca
@@ -87,7 +87,8 @@ class Pawn(Piece):
 
         self.verify_moves(check)
 
-    def move(self, pos: tuple[int, int], mock: bool = False) -> None:
+    def move(self, pos: tuple[int, int], mock: bool = False) -> bool:
+        promotion = False
         column = self.get_column()
         piece = self.board.get_piece(pos)
         # verifica se eh en passant
@@ -104,4 +105,7 @@ class Pawn(Piece):
                 else:
                     self.board.match.passant_black = self
             super().move(pos, mock)
+            if pos [0] == 0 or pos[0] == 7 and not mock:
+                promotion = True
         if not mock: self.board.match.set_cont_zero()
+        return promotion
