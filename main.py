@@ -17,7 +17,8 @@ def desenha_tela(tabuleiro: Board) -> None:
     tabuleiro.white_group.update()
 
 
-def end_turn(jogo: Match, tabuleiro: Board, white_turn: bool) -> tuple[bool, list[Piece]]:
+def end_turn(game_state: str, jogo: Match, tabuleiro: Board, white_turn: bool) -> tuple[bool, list[Piece], str, str]:
+    winner = ''
     if white_turn:
         jogo.passant_black = None
     else:
@@ -31,15 +32,21 @@ def end_turn(jogo: Match, tabuleiro: Board, white_turn: bool) -> tuple[bool, lis
         p.possible_moves(check)
         
     if jogo.is_checkmate(white_turn, check):
-        # tela de fim de jogo: xeque-mate
-        pass
+        game_state = "checkmate"
+        menu.game_state = game_state
+        winner = "black" if white_turn else "white"
+    
+    if jogo.is_tie(white_turn, check):
+        game_state = "tie"
+        menu.game_state = game_state
     tabuleiro.printa()
 
-    return (white_turn, pecas)
+    return (white_turn, pecas, game_state, winner)
 
 
-def player(jogo: Match, tabuleiro: Board, white_turn: bool, peca: Piece, pecas: list[Piece], movimentos_validos: list[tuple[int, int]], 
-           sel: tuple[int, int]) -> tuple[bool, Piece, list[Piece], list[tuple[int, int]], list[tuple[int, int]]]:
+def player(game_state: str, jogo: Match, tabuleiro: Board, white_turn: bool, peca: Piece, pecas: list[Piece], movimentos_validos: list[tuple[int, int]], 
+           sel: tuple[int, int]) -> tuple[bool, Piece, list[Piece], list[tuple[int, int]], list[tuple[int, int]], str, str]:
+    winner = ''
     pygame.event.set_blocked(pygame.MOUSEMOTION)
     for event in pygame.event.get():
 
@@ -71,7 +78,7 @@ def player(jogo: Match, tabuleiro: Board, white_turn: bool, peca: Piece, pecas: 
                     peca.move((7-round(y/tamanho), round(x/tamanho)))
                     peca.selecionado = False
                     movimentos_validos = []
-                    white_turn, pecas = end_turn(jogo, tabuleiro, white_turn)
+                    white_turn, pecas, game_state, winner = end_turn(game_state, jogo, tabuleiro, white_turn)
                     desenha_tela(tabuleiro)
 
     if show_possible_moves:
@@ -79,29 +86,13 @@ def player(jogo: Match, tabuleiro: Board, white_turn: bool, peca: Piece, pecas: 
             pygame.draw.circle(tela, (207,14,14), (x+tamanho/2, y+tamanho/2), 10)
     selecionado(sel)
 
-    return (white_turn, peca, pecas, movimentos_validos, sel)
+    return (white_turn, peca, pecas, movimentos_validos, sel, game_state, winner)
 
-
-jogo: Match = Match(tabuleiro)
-
-sel = (20000, 30000)
-peca: Piece = Piece()
-white_turn = True
-check = False
-movimentos_validos = []
 
 game_loop = True
 game_state = "menu"
 menu = Menu(tela, game_loop, game_state)
 show_possible_moves = True
-has_ia = True
-player_is_white = True
-
-if has_ia: ai_player = ChessPlayer(not player_is_white, jogo, tabuleiro, 4)
-
-pecas = tabuleiro.get_pieces(white_turn)
-for p in pecas:
-    p.possible_moves(check)
 
 while game_loop:
     tela.fill('black')
@@ -109,13 +100,34 @@ while game_loop:
         game_loop, game_state = menu.draw()
     elif game_state == "options":
         show_possible_moves, game_state = menu.options(show_possible_moves)
+    elif game_state == "checkmate":
+        game_loop, game_state = menu.checkmate(winner)
+    elif game_state == "tie":
+        game_loop, game_state = menu.tie()
+    elif game_state == "new_game":
+        tabuleiro: Board = Board(tela, tamanho)
+        jogo: Match = Match(tabuleiro)
+        sel_x, sel_y = 20000, 30000
+        peca: Piece = Piece()
+        white_turn = True
+        check = False
+        has_ia = True
+        player_is_white = True
+        movimentos_validos = []
+
+        if has_ia: ai_player = ChessPlayer(not player_is_white, jogo, tabuleiro, 4)
+        pecas = tabuleiro.get_pieces(white_turn)
+        for p in pecas:
+            p.possible_moves(check)
+        game_state = "game"
+
     elif game_state == "game":
         desenha_tela(tabuleiro)
         if not has_ia:
-            white_turn, peca, pecas, movimentos_validos, sel = player(jogo, tabuleiro, white_turn, peca, pecas, movimentos_validos, sel)
+            white_turn, peca, pecas, movimentos_validos, sel, game_state, winner = player(game_state, jogo, tabuleiro, white_turn, peca, pecas, movimentos_validos, sel)
         else:
             if player_is_white == white_turn:
-                white_turn, peca, pecas, movimentos_validos, sel = player(jogo, tabuleiro, white_turn, peca, pecas, movimentos_validos, sel)
+                white_turn, peca, pecas, movimentos_validos, sel, game_state, winner = player(game_state, jogo, tabuleiro, white_turn, peca, pecas, movimentos_validos, sel)
             else:
                 ai_player.set_next_move()
                 peca, move = ai_player.next_move

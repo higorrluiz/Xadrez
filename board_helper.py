@@ -12,8 +12,6 @@ tela = pygame.display.set_mode((largura,altura))
 pygame.display.set_caption('Jogo')
 clock = pygame.time.Clock()
 
-tabuleiro: Board = Board(tela, tamanho)
-
 def selecionado(pos):
     x = pos[0]/tamanho
     y = pos[1]/tamanho
