@@ -22,16 +22,15 @@ class ChessPlayer():
         self.match = match
         self.board = board
         self.depth = depth
-        self.moves = None
-        self.pieces = None
         self.next_move = None
 
-    def player_moves(self):
-        self.pieces = self.board.get_pieces(self.color)
-        self.moves = []
+    def player_moves(self, color):
+        self.pieces = self.board.get_pieces(color)
+        moves = []
         for p in self.pieces:
             for move in p.get_moves():
-                self.moves.append([p, move])
+                moves.append([p, move])
+        return moves
 
     def set_next_move(self):
         self.__minimaxRoot()
@@ -44,74 +43,77 @@ class ChessPlayer():
             best_move = 9999
         bestMoveFinal = None
         value = 0
-        self.player_moves()
-        for x in range(len(self.moves)):
-            piece = self.moves[x][0]
-            move = self.moves[x][1]
+        print(self.color)
+        possible_moves = self.player_moves(self.color)
+        for x in range(len(possible_moves)):
+            piece = possible_moves[x][0]
+            move = possible_moves[x][1]
             this_move = [piece, move]
-            matrix = [row[:] for row in self.board.matrix]
-            white = self.board.white[:]
-            black = self.board.black[:]
-            column = piece.get_column()
-            row = piece.get_row()
-            peca_atacada = self.board.get_piece(move)
-            if peca_atacada is not None:
-                self.board._Board__delete_piece(move)
-            piece.row = move[0]
-            piece.column = move[1]
+            old_state = {}
+            old_state['matrix'] = [row[:] for row in self.board.matrix]
+            old_state['white'] = self.board.white[:]
+            old_state['black'] = self.board.black[:]
+            old_state['column'] = piece.get_column()
+            old_state['row'] = piece.get_row()
+            old_state['passant_w'] = self.match.passant_white
+            old_state['passant_b'] = self.match.passant_black
+            piece.move(move, mock=True)
+            
+
             if self.color:
                 value = max(best_move, self.__minimax(self.depth - 1, self.board, -10000, 10000, not self.color))
             else:
                 value = min(best_move, self.__minimax(self.depth - 1, self.board, -10000, 10000, not self.color))
-            piece.column = column
-            piece.row = row
-            if peca_atacada is not None:
-                peca_atacada.row = move[0]
-                peca_atacada.column = move[1]
-                self.board._Board__add_piece(peca_atacada, move)
-            self.board.white = white
-            self.board.black = black
-            self.board.matrix = matrix
+
+            self._load_state(old_state)
+            piece.column = old_state['column']
+            piece.row = old_state['row']
             if (value < best_move):
                 best_move = value
                 bestMoveFinal = this_move
+        print(value, bestMoveFinal)
         self.next_move = bestMoveFinal
 
     def __minimax(self, depth, board, alpha, beta, is_maximizing):
         if (depth == 0):
             return self.__evaluation()
-        self.player_moves()
         best_move = None
+        possible_moves = self.player_moves(is_maximizing)
+        if len(possible_moves) == 0:
+            if self.match.king_is_checked(is_maximizing):
+                best_move = -9999
+                if not is_maximizing:
+                    best_move = 9999
+                return best_move
+            else:
+                return 0
         if is_maximizing:
             best_move = beta
         else:
             best_move = alpha
-        for x in range(len(self.moves)):
-            piece = self.moves[x][0]
-            move = self.moves[x][1]
-            matrix = [row[:] for row in board.matrix]
-            white = board.white[:]
-            black = board.black[:]
-            column = piece.get_column()
-            row = piece.get_row()
-            peca_atacada = board.get_piece(move)
-            if peca_atacada is not None:
-                board._Board__delete_piece(move)
-            piece.row = move[0]
-            piece.column = move[1]
+        for x in range(len(possible_moves)):
+            piece = possible_moves[x][0]
+            move = possible_moves[x][1]
+            old_state = {}
+            old_state['matrix'] = [row[:] for row in self.board.matrix]
+            old_state['white'] = self.board.white[:]
+            old_state['black'] = self.board.black[:]
+            old_state['column'] = piece.get_column()
+            old_state['row'] = piece.get_row()
+            old_state['passant_w'] = self.match.passant_white
+            old_state['passant_b'] = self.match.passant_black
+            self.board.printa()
+            piece.move(move, mock=True)
+
+            #  promoção 
+
             if (is_maximizing):
                 best_move = min(best_move, self.__minimax(depth - 1, board, alpha, beta, not is_maximizing))
             else:
                 best_move = max(best_move, self.__minimax(depth - 1, board, alpha, beta, not is_maximizing))
-            piece.column = column
-            piece.row = row
-            if peca_atacada is not None:
-                peca_atacada.row = move[0]
-                peca_atacada.column = move[1]
-                board._Board__add_piece(peca_atacada, move)
-            board.white = white
-            board.black = black
-            board.matrix = matrix
+            piece.column = old_state['column']
+            piece.row = old_state['row']
+            self._load_state(old_state)
             if (is_maximizing):
                 alpha = max(alpha, best_move)
                 if beta <= alpha:
@@ -125,6 +127,7 @@ class ChessPlayer():
     def __evaluation(self):
         white_eval = self.__get_white_player_eval()
         black_eval = self.__get_black_player_eval()
+        print(white_eval - black_eval)
         return white_eval - black_eval
 
     def __get_white_player_eval(self):
@@ -166,3 +169,11 @@ class ChessPlayer():
             if isinstance(piece, King):
                 eval = eval + 900 + EVAL.black_king[piece_row][piece_col]
         return eval
+
+
+    def _load_state(self, state_dict):
+        self.board.matrix = [row[:] for row in state_dict['matrix']]
+        self.board.white = state_dict['white'][:]
+        self.board.black = state_dict['black'][:]
+        self.match.passant_white = state_dict['passant_w']
+        self.match.passant_black = state_dict['passant_b']
