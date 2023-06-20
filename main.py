@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from classes.piece import Piece
+from classes.pawn import Pawn
 from classes.match import Match
 from board_helper import *
 from menu import Menu
@@ -78,6 +79,10 @@ while game_loop:
                             jogo.passant_black = None
                         else:
                             jogo.passant_white = None
+
+                        if isinstance(peca, Pawn) and peca.get_row() in [0, 7]: 
+                            menu.promotion(peca, white_turn)
+                        
                         white_turn = not white_turn
                         
                         check = jogo.king_is_checked(white_turn)
