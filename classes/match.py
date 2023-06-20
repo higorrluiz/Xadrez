@@ -19,9 +19,9 @@ class Match:
         self.passant_white: Pawn = None
         # peca preta que pode ser capturada pelo en passant
         self.passant_black: Pawn = None
-    
-    def get_cont(self) -> int:
-        return self.cont
+
+    def get_cont(self) -> None:
+        return self.cont 
     
     def set_cont_zero(self) -> None:
         self.cont = 0
@@ -274,6 +274,25 @@ class Match:
                     return True
         return False
 
-    # 
-    # metodos de condicao de fim de partida
-    # 
+    def is_tie(self, is_white: bool, check: bool) -> bool:
+        if self.cont == 50: return True  # checa regra dos 50 movimentos
+        if self._is_stalemate(is_white, check): return True
+        if self._insufficient_material(): return True
+        return False
+
+    def _is_stalemate(self, is_white: bool, check: bool) -> bool:
+        if check: return False
+        pieces: list[Piece] = self.board.get_pieces(is_white)
+        for piece in pieces:
+            if piece.get_moves(): return False
+        return True
+    
+    def _insufficient_material(self) -> bool:  # K - KN - KB
+        for is_white in [False, True]:
+            pieces: list[Piece] = self.board.get_pieces(is_white)
+            if len(pieces) >= 3: return False 
+            for piece in pieces:
+                if isinstance(piece, Queen): return False
+                if isinstance(piece, Rook): return False
+                if isinstance(piece, Pawn): return False
+        return True
