@@ -11,6 +11,7 @@ game_loop = True
 game_state = "menu"
 menu = Menu(tela, game_loop, game_state)
 show_possible_moves = True
+ia_toggled = False
 
 while game_loop:
     tela.fill('black')
@@ -22,6 +23,8 @@ while game_loop:
         game_loop, game_state = menu.checkmate(winner)
     elif game_state == "tie":
         game_loop, game_state = menu.tie()
+    elif game_state == "mode_selection":
+        game_loop, game_state, ia_toggled = menu.mode_selection(ia_toggled)
     elif game_state == "new_game":
         tabuleiro: Board = Board(tela, tamanho)
         jogo: Match = Match(tabuleiro)
