@@ -40,7 +40,7 @@ while game_loop:
         sel_x, sel_y = 20000, 30000
         x, y = 0, 0
         peca: Piece = Piece()
-        white_turn, check, show_possible_moves, has_ia, player_is_white = get_config(STATE_PATH)
+        white_turn, check, has_ia, player_is_white = get_config(STATE_PATH)
         movimentos_validos = []
         pecas = tabuleiro.get_pieces(white_turn)
         for p in pecas:
@@ -80,7 +80,7 @@ while game_loop:
             mouse_pos = pygame.mouse.get_pos()
 
             if (event.type == botao_exit) or (event.type == QUIT):
-                tabuleiro.save_state(STATE_PATH, [white_turn, check, show_possible_moves, has_ia, player_is_white])
+                tabuleiro.save_state(STATE_PATH, [white_turn, check, has_ia, player_is_white])
                 pygame.quit()
                 exit()
 
