@@ -41,7 +41,6 @@ def end_turn() -> tuple[bool, list[Piece], str, str]:
     if jogo.is_tie(white_turn, check):
         game_state = "tie"
         menu.game_state = game_state
-    tabuleiro.printa()
 
 
 def player() -> None:
@@ -112,7 +111,7 @@ while game_loop:
         player_is_white = True
         movimentos_validos = []
 
-        if has_ia: ai_player = ChessPlayer(not player_is_white, jogo, tabuleiro, 4)
+        if has_ia: ai_player = ChessPlayer(not player_is_white, jogo, tabuleiro, 3)
         pecas = tabuleiro.get_pieces(white_turn)
         for p in pecas:
             p.possible_moves(check)

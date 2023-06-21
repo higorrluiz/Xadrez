@@ -1,18 +1,10 @@
-# import chess
-# import sunfish
-# import math
-import random
-import sys
 
-from classes.piece import Piece
 from classes.pawn import Pawn
 from classes.rook import Rook
 from classes.bishop import Bishop
 from classes.queen import Queen
 from classes.knight import Knight
 from classes.king import King
-from classes.match import Match
-from board_helper import *
 import evaluation as EVAL
 
 
@@ -45,7 +37,6 @@ class ChessPlayer():
             best_move = 9999
         bestMoveFinal = None
         value = 0
-        print(self.color)
         possible_moves = self.player_moves(self.color, False)
         for x in range(len(possible_moves)):
             promote_flag = False
@@ -61,7 +52,6 @@ class ChessPlayer():
             old_state['str_pos'] = piece.get_pos_str()
             old_state['passant_w'] = self.match.passant_white
             old_state['passant_b'] = self.match.passant_black
-            # piece.move(move, mock=True)
             if isinstance(piece, Pawn) and (move[0] == 0 or move[0] == 7):
                 old_state['pawn'] = piece
                 piece.move(move, mock=True)
@@ -70,9 +60,9 @@ class ChessPlayer():
             else:
                 piece.move(move, mock=True)
             if self.color:
-                value = max(best_move, self.__minimax(self.depth - 1, self.board, -10000, 10000, not self.color))
+                value = max(best_move, self.__minimax(self.depth - 1, self.board, not self.color))
             else:
-                value = min(best_move, self.__minimax(self.depth - 1, self.board, -10000, 10000, not self.color))
+                value = min(best_move, self.__minimax(self.depth - 1, self.board, not self.color))
             if promote_flag:
                 self.board._Board__delete_piece(move)
                 self._load_state(old_state)
@@ -86,14 +76,12 @@ class ChessPlayer():
                 self._load_state(old_state)
                 piece.row = old_state['row']
                 piece.column = old_state['column']
-                # self.board._Board__add_piece(Pawn(old_state['str_pos'], self.color), (old_state['row'], old_state['column']))
-                print(piece, move)
             if (value < best_move):
                 best_move = value
                 bestMoveFinal = this_move
         self.next_move = bestMoveFinal
 
-    def __minimax(self, depth, board, alpha, beta, is_maximizing):
+    def __minimax(self, depth, board, is_maximizing):
         if (depth == 0):
             return self.__evaluation()
         best_move = None
@@ -107,9 +95,9 @@ class ChessPlayer():
             else:
                 return 0
         if is_maximizing:
-            best_move = beta
+            best_move = 9999
         else:
-            best_move = alpha
+            best_move = -9999
         for x in range(len(possible_moves)):
             promote_flag = False
             piece = possible_moves[x][0]
@@ -123,7 +111,6 @@ class ChessPlayer():
             old_state['str_pos'] = piece.get_pos_str()
             old_state['passant_w'] = self.match.passant_white
             old_state['passant_b'] = self.match.passant_black
-            # piece.move(move, mock=True)
             if isinstance(piece, Pawn) and (move[0] == 0 or move[0] == 7):
                 old_state['pawn'] = piece
                 piece.move(move, mock=True)
@@ -132,15 +119,15 @@ class ChessPlayer():
             else:
                 piece.move(move, mock=True)
             if (is_maximizing):
-                best_move = min(best_move, self.__minimax(depth - 1, board, alpha, beta, not is_maximizing))
+                best_move = min(best_move, self.__minimax(depth - 1, board, not is_maximizing))
             else:
-                best_move = max(best_move, self.__minimax(depth - 1, board, alpha, beta, not is_maximizing))
+                best_move = max(best_move, self.__minimax(depth - 1, board, not is_maximizing))
             if promote_flag:
                 self.board._Board__delete_piece(move)
                 self._load_state(old_state)
                 piece.row = old_state['row']
                 piece.column = old_state['column']
-                if is_maximizing == True:
+                if is_maximizing:
                     self.board.white_group.add(old_state['pawn'])
                 else:
                     self.board.black_group.add(old_state['pawn'])
@@ -148,14 +135,6 @@ class ChessPlayer():
                 self._load_state(old_state)
                 piece.row = old_state['row']
                 piece.column = old_state['column']
-            if (is_maximizing):
-                alpha = max(alpha, best_move)
-                if beta <= alpha:
-                    return alpha
-            else:
-                beta = min(beta, best_move)
-                if (beta <= alpha):
-                    return beta
         return best_move
 
     def __evaluation(self):
@@ -202,7 +181,6 @@ class ChessPlayer():
             if isinstance(piece, King):
                 eval = eval + 900 + EVAL.black_king[piece_row][piece_col]
         return eval
-
 
     def _load_state(self, state_dict):
         self.board.matrix = [row[:] for row in state_dict['matrix']]
