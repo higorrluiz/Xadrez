@@ -15,7 +15,7 @@ class Pawn(Piece):
         self.name = 'p'
 
     def promote(self, piece: Type[Piece]) -> None:
-        self.board.promotion(piece, self.get_position())
+        self.board.promotion(piece, self.get_pos())
     
     def possible_moves(self, check: bool) -> None:
         # limpa a lista de movimentos e pega a posicao da peca

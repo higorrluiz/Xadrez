@@ -2,6 +2,8 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from classes.piece import Piece
+from classes.pawn import Pawn
+from classes.queen import Queen
 from classes.match import Match
 from board_helper import *
 from menu import Menu
@@ -128,6 +130,9 @@ while game_loop:
                 peca, move = ai_player.next_move
                 # peca, move = ai.minimaxRoot(3, tabuleiro, False)
                 peca.move(move)
+                if isinstance(peca, Pawn) and (move[0] == 0 or move[0] == 7):
+                    passant_flag = True
+                    peca.promote(Queen(peca.get_pos_str(), ai_player.color))
                 end_turn()
 
     pygame.display.flip()
