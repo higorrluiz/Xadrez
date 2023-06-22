@@ -12,7 +12,7 @@ from importador import *
 
 class Board():
 
-    def __init__(self, tela: pygame.Surface, tam: float, state: str = None) -> None:
+    def __init__(self, tela: pygame.Surface, tam: float, arq: str = None) -> None:
         self.match = None
 
         self.linhas = 8
@@ -26,7 +26,7 @@ class Board():
         self.black_group = pygame.sprite.Group()
 
         self.matrix = []
-        if state is None:
+        if arq is None:
             # primeira linha da matriz corresponde a linha 1 do tabuleiro (a linha de baixo)
             self.matrix = [[Rook('A1', True), Knight('B1', True), Bishop('C1', True), Queen('D1', True),
                             King('E1', True), Bishop('F1', True), Knight('G1', True), Rook('H1', True)],
@@ -42,9 +42,64 @@ class Board():
                             King('E8', False), Bishop('F8', False), Knight('G8', False), Rook('H8', False)]
                           ]
         else:
-            # falta implementação
-            pass
+            handle = open(arq, 'r')
+            linhas = handle.readlines()
+            handle.close()
+
+            matrix = [linha.strip() for linha in linhas[:8]]
+            moved_string = linhas[8:9][0].strip()
+            
+            piece: Piece
+            index = 0
+            self.matrix = []
+            for i, linha in enumerate(matrix, 1):
+                aux = []
+                for j, char in zip(COLUNAS_STR, linha):
+                    if char == '-': piece = None
+                    else:
+                        is_white = (char == char.lower())
+                        pos = j + str(i)
+                        if char.upper() == 'P': piece = Pawn(pos, is_white)
+                        elif char.upper() == 'N': piece = Knight(pos, is_white)
+                        elif char.upper() == 'B': piece = Bishop(pos, is_white)
+                        elif char.upper() == 'Q': piece = Queen(pos, is_white)
+                        else:
+                            moved = (moved_string[index].upper() == 'T')
+                            index += 1
+                            if char.upper() == 'R': piece = Rook(pos, is_white, moved)
+                            else: piece = King(pos, is_white, moved)  # char.upper() == 'K'
+                    aux.append(piece)
+                self.matrix.append(aux)
+                
         self.__insert_pieces()
+
+    def save_state(self, arq: str, config: list[bool]) -> None:
+        moved_list = []
+        handle = open(arq, 'w')
+        for i in range(self.linhas):  # 0 - 7
+            for j in range(self.colunas):
+                piece: Piece = self.get_piece((i, j))
+                if piece is None: 
+                    handle.write('-')
+                else:
+                    handle.write(piece.name.lower() if piece.is_white else piece.name.upper())
+                    if isinstance(piece, Rook) or isinstance(piece, King): moved_list.append(piece.moved)
+            handle.write('\n')
+        for moved in moved_list:  # 8
+            handle.write('T' if moved else 'F')
+        handle.write('\n')
+        passant: list[Piece] = [self.match.passant_white, self.match.passant_black]
+        for p in passant:  # 9
+            if p is not None:
+                pos = p.get_pos()
+                handle.write(f'{pos[0]}{pos[1]}')
+            else: 
+                handle.write('--')
+        handle.write('\n')
+        handle.write(f'{self.match.cont}')  # 10
+        handle.write('\n')
+        for value in config: handle.write('T' if value else 'F')  # 11
+        handle.close()
 
     def get_piece(self, pos: tuple[int, int]) -> Type[Piece]:
         if 0 <= pos[0] <= 7 and 0 <= pos[1] <= 7:

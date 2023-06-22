@@ -1,13 +1,16 @@
 import pygame
+import os
+from importador import ASSETS_PATH, STATE_PATH
 from classes.bishop import Bishop
 from classes.queen import Queen
 from classes.knight import Knight
 from classes.rook import Rook
 
-ASSETS_PATH = "assets/images/menu/"
 
 class Menu:
     def __init__(self, tela: pygame.Surface, game_loop: bool, game_state: bool) -> None:
+        self.saved_state = os.stat(STATE_PATH).st_size != 0
+
         self.tela = tela
         self.game_loop = game_loop
         self.game_state = game_state
@@ -17,9 +20,11 @@ class Menu:
         self.button_height = self.tela.get_height() // 10
         self.button_x = self.tela.get_width() // 2 - self.button_width // 2
         self.button_y = self.tela.get_height() // 2 - self.button_height // 2
+        if self.saved_state: self.botao_continue = pygame.image.load(ASSETS_PATH + "continue_button.png")
         self.botao_play = pygame.image.load(ASSETS_PATH + "play_button.png")
         self.botao_exit = pygame.image.load(ASSETS_PATH + "exit_button.jpg")
         self.botao_options = pygame.image.load(ASSETS_PATH + "options_button.png")
+        if self.saved_state: self.botao_continue_rect = self.botao_play.get_rect(topleft=(self.button_x, self.button_y - self.button_height * 1.5))
         self.botao_play_rect = self.botao_play.get_rect(topleft=(self.button_x, self.button_y))
         self.botao_options_rect = self.botao_options.get_rect(topleft=(self.button_x, self.button_y + self.button_height * 1.5))
         self.botao_exit_rect = self.botao_exit.get_rect(topleft=(self.button_x, self.button_y + self.button_height * 3))
@@ -41,6 +46,7 @@ class Menu:
     def draw(self) -> tuple[bool, str]:
         self.tela.blit(self.background, (0, 0))
         self.tela.blit(self.texto_titulo, (self.tela.get_width() // 2 - self.texto_titulo.get_width() // 2, self.tela.get_height() // 10))
+        if self.saved_state:self.tela.blit(self.botao_continue, self.botao_continue_rect)
         self.tela.blit(self.botao_play, self.botao_play_rect)
         self.tela.blit(self.botao_options, self.botao_options_rect)
         self.tela.blit(self.botao_exit, self.botao_exit_rect)
@@ -50,7 +56,10 @@ class Menu:
             if (event.type == self.botao_exit) or (event.type == pygame.QUIT):
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONUP:
-                if self.botao_play_rect.collidepoint(mouse_pos):
+                if self.saved_state and self.botao_continue_rect.collidepoint(mouse_pos):
+                    self.game_state = "continue_game"
+                    self.game_loop = True
+                elif self.botao_play_rect.collidepoint(mouse_pos):
                     self.game_state = "new_game"
                     self.game_loop = True
                 elif self.botao_exit_rect.collidepoint(mouse_pos):
@@ -111,6 +120,7 @@ class Menu:
         return show_possible_moves, self.game_state
     
     def end_game(self, text_1: str, text_2: str) -> tuple[bool, str]:
+        self.saved_state = False
         self.tela.blit(self.background, (0, 0))
         fonte = pygame.font.SysFont('Arial', self.tela.get_height() // 20)
         texto_xeque = fonte.render(text_1, True, (0, 0, 0))
