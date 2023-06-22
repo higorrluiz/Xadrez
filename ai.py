@@ -52,15 +52,14 @@ class ChessPlayer():
             old_state['str_pos'] = piece.get_pos_str()
             old_state['passant_w'] = self.match.passant_white
             old_state['passant_b'] = self.match.passant_black
-            if isinstance(piece, Pawn) and (move[0] == 0 or move[0] == 7):
-                old_state['pawn'] = piece
-                piece.move(move, mock=True)
-                promote_flag = True
-                piece.promote(Queen(piece.get_pos_str(), self.color))
             if (isinstance(piece, King) or isinstance(piece, Rook)):
                 old_state['piece_moved'] = piece.get_moved
-            else:
-                piece.move(move, mock=True)
+            piece.move(move, mock=True)
+            if self.board.get_king(not piece.is_white) is None: return 9999 if self.color else -9999
+            if isinstance(piece, Pawn) and (move[0] == 0 or move[0] == 7):
+                old_state['pawn'] = piece
+                promote_flag = True
+                piece.promote(Queen(piece.get_pos_str(), self.color))
             if self.color:
                 value = max(best_move, self.__minimax(self.depth - 1, self.board, not self.color))
             else:
@@ -91,13 +90,8 @@ class ChessPlayer():
         best_move = None
         possible_moves = self.player_moves(is_maximizing, True)
         if len(possible_moves) == 0:
-            if self.match.king_is_checked(is_maximizing):
-                best_move = -9999
-                if not is_maximizing:
-                    best_move = 9999
-                return best_move
-            else:
-                return 0
+            if self.match.king_is_checked(is_maximizing): return -9999 if is_maximizing else 9999
+            else: return 0
         if is_maximizing:
             best_move = -9999
         else:
@@ -115,15 +109,14 @@ class ChessPlayer():
             old_state['str_pos'] = piece.get_pos_str()
             old_state['passant_w'] = self.match.passant_white
             old_state['passant_b'] = self.match.passant_black
-            if isinstance(piece, Pawn) and (move[0] == 0 or move[0] == 7):
-                old_state['pawn'] = piece
-                piece.move(move, mock=True)
-                promote_flag = True
-                piece.promote(Queen(piece.get_pos_str(), self.color))
             if (isinstance(piece, King) or isinstance(piece, Rook)):
                 old_state['piece_moved'] = piece.get_moved
-            else:
-                piece.move(move, mock=True)
+            piece.move(move, mock=True)
+            if self.board.get_king(not piece.is_white) is None: return 9999 if is_maximizing else -9999
+            if isinstance(piece, Pawn) and (move[0] == 0 or move[0] == 7):
+                old_state['pawn'] = piece
+                promote_flag = True
+                piece.promote(Queen(piece.get_pos_str(), self.color))
             if (is_maximizing):
                 best_move = max(best_move, self.__minimax(depth - 1, board, not is_maximizing))
             else:
