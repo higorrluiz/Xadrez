@@ -22,15 +22,15 @@ class King(Piece):
     
     def __verify_castle(self, linha: int, step: int) -> None:
         moved = self.moved
-        self.move((linha, 4 + step))
+        self.move((linha, 4 + step), True)
         if not self.board.match.king_is_checked(self.is_white):
-            self.move((linha, 4 + 2*step))
+            self.move((linha, 4 + 2*step), True)
             if not self.board.match.king_is_checked(self.is_white):
                 self.moves.append((linha, 4 + 2*step))  # movimento
-            self.move((linha, 4 + step))
-            self.move((linha, 4))
+            self.move((linha, 4 + step), True)
+            self.move((linha, 4), True)
         else:
-            self.move((linha, 4))
+            self.move((linha, 4), True)
         self.moved = moved
     
     def possible_moves(self, check: bool) -> None:

@@ -142,6 +142,7 @@ class Board():
             self.black_group.add(piece)
     
     def __delete_piece(self, pos: tuple[int, int], mock: bool = False) -> None:
+        if not mock: self.match.set_cont_zero()
         piece = self.get_piece(pos)
         self.matrix[pos[0]][pos[1]] = None
         if piece.get_is_white():

@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from classes.piece import Piece
+from classes.pawn import Pawn
 from classes.match import Match
 from board_helper import *
 from menu import Menu
@@ -34,11 +35,12 @@ while game_loop:
         show_possible_moves, game_state = menu.options(show_possible_moves)
     elif game_state == "checkmate":
         game_loop, game_state = menu.checkmate(winner)
+    elif game_state == "tie":
+        game_loop, game_state = menu.tie()
     elif game_state == "continue_game":
         tabuleiro: Board = Board(tela, tamanho, STATE_PATH)
         jogo: Match = Match(tabuleiro, STATE_PATH)
         sel_x, sel_y = 20000, 30000
-        x, y = 0, 0
         peca: Piece = Piece()
         white_turn, check, has_ia, player_is_white = get_config(STATE_PATH)
         movimentos_validos = []
@@ -86,7 +88,7 @@ while game_loop:
 
             # permite selecao nas pecas pretas
             if event.type == pygame.MOUSEBUTTONUP:
-
+                p: Piece
                 for p in pecas:  # checa se o mouse cliclou em um peca
                     if p.rect.collidepoint(mouse_pos):
                         sel_x, sel_y = mouse_pos[0], mouse_pos[1]
@@ -102,8 +104,6 @@ while game_loop:
                     sel_x, sel_y = mouse_pos[0], mouse_pos[1]
                 
                     if (x, y) in movimentos_validos:
-                        peca.rect.x = x
-                        peca.rect.y = y
                         peca.move((7-round(y/tamanho), round(x/tamanho)))
                         
                         peca.selecionado = False
@@ -112,6 +112,10 @@ while game_loop:
                             jogo.passant_black = None
                         else:
                             jogo.passant_white = None
+
+                        if isinstance(peca, Pawn) and peca.get_row() in [0, 7]: 
+                            menu.promotion(peca, white_turn)
+                        
                         white_turn = not white_turn
                         
                         check = jogo.king_is_checked(white_turn)
@@ -123,7 +127,10 @@ while game_loop:
                             game_state = "checkmate"
                             menu.game_state = game_state
                             winner = "black" if white_turn else "white"
-                            pass
+
+                        if jogo.is_tie(white_turn, check):
+                            game_state = "tie"
+                            menu.game_state = game_state
                         # tabuleiro.printa()
                         
         if show_possible_moves:

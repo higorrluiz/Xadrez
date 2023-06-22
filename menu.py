@@ -1,10 +1,14 @@
 import pygame
 import os
 from importador import ASSETS_PATH, STATE_PATH
+from classes.bishop import Bishop
+from classes.queen import Queen
+from classes.knight import Knight
+from classes.rook import Rook
 
 
 class Menu:
-    def __init__(self, tela, game_loop, game_state):
+    def __init__(self, tela: pygame.Surface, game_loop: bool, game_state: bool) -> None:
         self.saved_state = os.stat(STATE_PATH).st_size != 0
 
         self.tela = tela
@@ -26,8 +30,20 @@ class Menu:
         self.botao_exit_rect = self.botao_exit.get_rect(topleft=(self.button_x, self.button_y + self.button_height * 3))
         self.fonte = pygame.font.SysFont('Arial', self.tela.get_height() // 10)
         self.texto_titulo = self.fonte.render('Xadrez 2', True, (255, 255, 255))
+        self.peca_images_white = {
+            "white queen": pygame.transform.scale(pygame.image.load("assets/images/white queen.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "white rook": pygame.transform.scale(pygame.image.load("assets/images/white rook.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "white bishop": pygame.transform.scale(pygame.image.load("assets/images/white bishop.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "white knight": pygame.transform.scale(pygame.image.load("assets/images/white knight.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            }
+        self.peca_images_black = {
+            "black queen": pygame.transform.scale(pygame.image.load("assets/images/black queen.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "black rook": pygame.transform.scale(pygame.image.load("assets/images/black rook.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "black bishop": pygame.transform.scale(pygame.image.load("assets/images/black bishop.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "black knight": pygame.transform.scale(pygame.image.load("assets/images/black knight.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            }
 
-    def draw(self):
+    def draw(self) -> tuple[bool, str]:
         self.tela.blit(self.background, (0, 0))
         self.tela.blit(self.texto_titulo, (self.tela.get_width() // 2 - self.texto_titulo.get_width() // 2, self.tela.get_height() // 10))
         if self.saved_state:self.tela.blit(self.botao_continue, self.botao_continue_rect)
@@ -52,7 +68,7 @@ class Menu:
                     self.game_state = "options"
         return self.game_loop, self.game_state
     
-    def options(self, show_possible_moves):
+    def options(self, show_possible_moves: bool) -> tuple[bool, str]:
         self.tela.blit(self.background, (0, 0))
         fonte = pygame.font.SysFont('Arial', self.tela.get_height() // 20)
         texto_opcoes = fonte.render('Mostrar movimentos possíveis', True, (0, 0, 0))
@@ -103,19 +119,19 @@ class Menu:
         pygame.display.update()
         return show_possible_moves, self.game_state
     
-    def checkmate(self, color):
+    def end_game(self, text_1: str, text_2: str) -> tuple[bool, str]:
         self.saved_state = False
         self.tela.blit(self.background, (0, 0))
         fonte = pygame.font.SysFont('Arial', self.tela.get_height() // 20)
-        texto_xeque = fonte.render('XEQUE-MATE', True, (0, 0, 0))
+        texto_xeque = fonte.render(text_1, True, (0, 0, 0))
         texto_xeque_fundo = pygame.Surface((texto_xeque.get_width() + 20, texto_xeque.get_height() + 10))
         texto_xeque_fundo.fill((255, 255, 255))
         texto_xeque_fundo.blit(texto_xeque, (10, 5))
         self.tela.blit(texto_xeque_fundo, (self.tela.get_width() // 2 - texto_xeque_fundo.get_width() // 2, self.tela.get_height() // 4 - texto_xeque_fundo.get_height() // 2))
-        texto_vencedor = fonte.render(f"O jogador {color.upper()} venceu!", True, (255, 255, 255))
+        if text_2 != '': texto_vencedor = fonte.render(text_2, True, (255, 255, 255))
         botao_voltar = pygame.Rect(self.tela.get_width() // 2 - 100, self.tela.get_height() - 100, 200, 50)
         texto_voltar = fonte.render('VOLTAR', True, (0, 0, 0))
-        self.tela.blit(texto_vencedor, ((self.tela.get_width() // 2) - texto_vencedor.get_width() // 2, self.tela.get_height() // 2 + texto_vencedor.get_height() // 2))
+        if text_2 != '': self.tela.blit(texto_vencedor, ((self.tela.get_width() // 2) - texto_vencedor.get_width() // 2, self.tela.get_height() // 2 + texto_vencedor.get_height() // 2))
         pygame.draw.rect(self.tela, (0, 0, 0), botao_voltar, 2)
         self.tela.blit(texto_voltar, (self.tela.get_width() // 2 - texto_voltar.get_width() // 2, self.tela.get_height() - 75 - texto_voltar.get_height() // 2))
         for event in pygame.event.get():
@@ -126,10 +142,64 @@ class Menu:
             if event.type == pygame.MOUSEBUTTONUP:
                 if botao_voltar.collidepoint(mouse_pos):
                     self.game_state = "menu"
-        texto_vencedor_fundo = pygame.Surface((texto_vencedor.get_width() + 20, texto_vencedor.get_height() + 10))
-        texto_vencedor_fundo.fill((0, 0, 0))
-        texto_vencedor_fundo.blit(texto_vencedor, (10, 5))
-        self.tela.blit(texto_vencedor_fundo, (self.tela.get_width() // 2 - texto_vencedor_fundo.get_width() // 2, self.tela.get_height() // 2 + texto_vencedor_fundo.get_height() // 2))
+        if text_2 != '':
+            texto_vencedor_fundo = pygame.Surface((texto_vencedor.get_width() + 20, texto_vencedor.get_height() + 10))
+            texto_vencedor_fundo.fill((0, 0, 0))
+            texto_vencedor_fundo.blit(texto_vencedor, (10, 5))
+            self.tela.blit(texto_vencedor_fundo, (self.tela.get_width() // 2 - texto_vencedor_fundo.get_width() // 2, self.tela.get_height() // 2 + texto_vencedor_fundo.get_height() // 2))
 
         pygame.display.update()
         return self.game_loop, self.game_state
+    
+    def checkmate(self, color: str) -> tuple[bool, str]:
+        winner_text = f'O jogador {color.upper()} venceu!'
+        return self.end_game('XEQUE-MATE', winner_text)
+    
+    def tie(self) -> tuple[bool, str]:
+        return self.end_game('EMPATE', '')
+    
+    def promotion(self, peca, white_turn):
+        self.tela.blit(self.background, (0, 0))
+        texto_promocao = self.fonte.render('PROMOÇÃO', True, (0, 0, 0))
+        texto_promocao_fundo = pygame.Surface((texto_promocao.get_width() + 20, texto_promocao.get_height() + 10))
+        texto_promocao_fundo.fill((255, 255, 255))
+        texto_promocao_fundo.blit(texto_promocao, (10, 5))
+        self.tela.blit(texto_promocao_fundo, (self.tela.get_width() // 2 - texto_promocao_fundo.get_width() // 2, self.tela.get_height() // 4 - texto_promocao_fundo.get_height() // 2))
+        fonte_meio = pygame.font.SysFont('Arial', self.tela.get_height() // 20)
+        texto_meio = fonte_meio.render("Escolha a peça para promover", True, (0, 0, 0))
+        texto_meio_fundo = pygame.Surface((texto_meio.get_width() + 20, texto_meio.get_height() + 10))
+        texto_meio_fundo.fill((255, 255, 255))
+        texto_meio_fundo.blit(texto_meio, (10, 5))
+        self.tela.blit(texto_meio_fundo, ((self.tela.get_width() // 2) - texto_meio.get_width() // 2, self.tela.get_height() // 2 + texto_meio.get_height() // 2))
+        num_pecas = len(self.peca_images_white)
+        largura_disponivel = self.tela.get_width() - 20
+        largura_peca = largura_disponivel // num_pecas
+        y = self.tela.get_height() // 2 + texto_promocao.get_height() * 2
+        x = largura_peca - 10
+        images = self.peca_images_white if white_turn else self.peca_images_black
+        peca_rects = []
+        chosen = False
+        for key in images:
+            peca_image = images[key]
+            peca_rect = pygame.Rect(x, y, peca_image.get_width(), peca_image.get_height())
+            peca_rects.append(peca_rect)
+            self.tela.blit(peca_image, (x, y))
+            x += peca_image.get_width() + 10
+        while not chosen:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+            for rect in peca_rects:
+                if pygame.mouse.get_pressed()[0] and rect.collidepoint(pygame.mouse.get_pos()):
+                    if peca_rects.index(rect) == 0:
+                        peca.promote(Queen(peca.get_pos_str(), white_turn))
+                    if peca_rects.index(rect) == 1:
+                        peca.promote(Rook(peca.get_pos_str(), white_turn))
+                    if peca_rects.index(rect) == 2:
+                        peca.promote(Bishop(peca.get_pos_str(), white_turn)) 
+                    if peca_rects.index(rect) == 3:
+                        peca.promote(Knight(peca.get_pos_str(), white_turn))
+                    chosen = True
+
+            pygame.display.update()
