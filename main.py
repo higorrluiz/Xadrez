@@ -126,12 +126,10 @@ while game_loop:
                 player()
             else:
                 ai_player.set_next_move()
-                peca, move = ai_player.next_move
-                # peca, move = ai.minimaxRoot(3, tabuleiro, False)
+                peca, move = ai_player.get_next_move()
                 peca.move(move)
-                if isinstance(peca, Pawn) and (move[0] == 0 or move[0] == 7):
-                    passant_flag = True
-                    peca.promote(Queen(peca.get_pos_str(), ai_player.color))
+                if isinstance(peca, Pawn) and (peca.get_row() in [0, 7]):
+                    peca.promote(Queen(peca.get_pos_str(), peca.get_is_white()))
                 end_turn()
 
     pygame.display.flip()

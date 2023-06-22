@@ -1,4 +1,7 @@
-
+from math import inf
+from classes.match import Match
+from classes.board import Board
+from classes.piece import Piece
 from classes.pawn import Pawn
 from classes.rook import Rook
 from classes.bishop import Bishop
@@ -9,60 +12,55 @@ import evaluation as EVAL
 
 
 class ChessPlayer():
-    def __init__(self, color, match, board, depth):
+    def __init__(self, color: bool, match: Match, board: Board, depth: int) -> None:
         self.color = color
         self.match = match
         self.board = board
         self.depth = depth
         self.next_move = None
 
-    def player_moves(self, color: bool, recalculate: bool):
+    def get_next_move(self) -> tuple[Piece, tuple[int, int]]:
+        return self.next_move
+
+    def player_moves(self, color: bool, recalculate: bool) -> list[tuple[Piece, tuple[int, int]]]:
         self.pieces = self.board.get_pieces(color)
         moves = []
         for p in self.pieces:
-            if recalculate:
-                p.possible_moves(True)
+            if recalculate: p.possible_moves(True)
             for move in p.get_moves():
-                moves.append([p, move])
+                moves.append((p, move))
         return moves
 
-    def set_next_move(self):
+    def set_next_move(self) -> None:
         self.__minimaxRoot()
 
-    def __minimaxRoot(self):
-        best_move = None
-        if self.color:
-            best_move = -9999
-        else:
-            best_move = 9999
+    def __minimaxRoot(self) -> None:
+        best_move = -inf if self.color else inf
         bestMoveFinal = None
         value = 0
         possible_moves = self.player_moves(self.color, False)
-        for x in range(len(possible_moves)):
-            piece = possible_moves[x][0]
-            move = possible_moves[x][1]
-            this_move = [piece, move]
+        for piece, move in possible_moves:
+            this_move = (piece, move)
             old_state = {}
             old_state['matrix'] = [row[:] for row in self.board.matrix]
             old_state['white'] = self.board.white[:]
             old_state['black'] = self.board.black[:]
-            old_state['column'] = piece.get_column()
-            old_state['row'] = piece.get_row()
-            old_state['str_pos'] = piece.get_pos_str()
             old_state['passant_w'] = self.match.passant_white
             old_state['passant_b'] = self.match.passant_black
+            old_state['column'] = piece.get_column()
+            old_state['row'] = piece.get_row()
             if (isinstance(piece, King) or isinstance(piece, Rook)):
                 old_state['piece_moved'] = piece.get_moved
 
             piece.move(move, mock=True)
-            if self.board.get_king(not piece.is_white) is None: return 9999 if self.color else -9999
+            if self.board.get_king(not piece.get_is_white()) is None: return inf if self.color else -inf
             if isinstance(piece, Pawn) and (move[0] in [0, 7]):
-                piece.promote(Queen(piece.get_pos_str(), self.color), mock=True)
+                piece.promote(Queen(piece.get_pos_str(), piece.get_is_white()), mock=True)
 
             if self.color:
-                value = max(best_move, self.__minimax(self.depth - 1, self.board, not self.color))
+                value = max(best_move, self.__minimax(self.depth - 1, not self.color))
             else:
-                value = min(best_move, self.__minimax(self.depth - 1, self.board, not self.color))
+                value = min(best_move, self.__minimax(self.depth - 1, not self.color))
             
             self._load_state(old_state)
             piece.row = old_state['row']
@@ -75,42 +73,35 @@ class ChessPlayer():
                 bestMoveFinal = this_move
         self.next_move = bestMoveFinal
 
-    def __minimax(self, depth, board, is_maximizing):
+    def __minimax(self, depth: int, is_maximizing: bool) -> float:
         if (depth == 0):
             return self.__evaluation()
-        best_move = None
         possible_moves = self.player_moves(is_maximizing, True)
         if len(possible_moves) == 0:
-            if self.match.king_is_checked(is_maximizing): return -9999 if is_maximizing else 9999
+            if self.match.king_is_checked(is_maximizing): return -inf if is_maximizing else inf
             else: return 0
-        if is_maximizing:
-            best_move = -9999
-        else:
-            best_move = 9999
-        for x in range(len(possible_moves)):
-            piece = possible_moves[x][0]
-            move = possible_moves[x][1]
+        best_move = -inf if is_maximizing else inf
+        for piece, move in possible_moves:
             old_state = {}
             old_state['matrix'] = [row[:] for row in self.board.matrix]
             old_state['white'] = self.board.white[:]
             old_state['black'] = self.board.black[:]
-            old_state['column'] = piece.get_column()
-            old_state['row'] = piece.get_row()
-            old_state['str_pos'] = piece.get_pos_str()
             old_state['passant_w'] = self.match.passant_white
             old_state['passant_b'] = self.match.passant_black
+            old_state['column'] = piece.get_column()
+            old_state['row'] = piece.get_row()
             if (isinstance(piece, King) or isinstance(piece, Rook)):
                 old_state['piece_moved'] = piece.get_moved
             
             piece.move(move, mock=True)
-            if self.board.get_king(not piece.is_white) is None: return 9999 if is_maximizing else -9999
+            if self.board.get_king(not piece.is_white) is None: return inf if is_maximizing else -inf
             if isinstance(piece, Pawn) and (move[0] == 0 or move[0] == 7):
                 piece.promote(Queen(piece.get_pos_str(), self.color), mock=True)
 
             if (is_maximizing):
-                best_move = max(best_move, self.__minimax(depth - 1, board, not is_maximizing))
+                best_move = max(best_move, self.__minimax(depth - 1, not is_maximizing))
             else:
-                best_move = min(best_move, self.__minimax(depth - 1, board, not is_maximizing))
+                best_move = min(best_move, self.__minimax(depth - 1, not is_maximizing))
             
             self._load_state(old_state)
             piece.row = old_state['row']
@@ -119,17 +110,16 @@ class ChessPlayer():
                 piece.moved = old_state['piece_moved']
         return best_move
 
-    def __evaluation(self):
+    def __evaluation(self) -> float:
         white_eval = self.__get_white_player_eval()
         black_eval = self.__get_black_player_eval()
         return white_eval - black_eval
 
-    def __get_white_player_eval(self):
+    def __get_white_player_eval(self) -> float:
         eval = 0
         pecas = self.board.get_pieces(True)
         for piece in pecas:
-            piece_col = piece.get_column()
-            piece_row = piece.get_row()
+            piece_row, piece_col = piece.get_pos()
             if isinstance(piece, Pawn):
                 eval = eval + 10 + EVAL.white_pawn[piece_row][piece_col]
             if isinstance(piece, Bishop):
@@ -144,12 +134,11 @@ class ChessPlayer():
                 eval = eval + 900 + EVAL.white_king[piece_row][piece_col]
         return eval
 
-    def __get_black_player_eval(self):
+    def __get_black_player_eval(self) -> float:
         eval = 0
         pecas = self.board.get_pieces(False)
         for piece in pecas:
-            piece_col = piece.get_column()
-            piece_row = piece.get_row()
+            piece_row, piece_col = piece.get_pos()
             if isinstance(piece, Pawn):
                 eval = eval + 10 + EVAL.black_pawn[piece_row][piece_col]
             if isinstance(piece, Bishop):
@@ -164,9 +153,9 @@ class ChessPlayer():
                 eval = eval + 900 + EVAL.black_king[piece_row][piece_col]
         return eval
 
-    def _load_state(self, state_dict):
-        self.board.matrix = [row[:] for row in state_dict['matrix']]
-        self.board.white = state_dict['white'][:]
-        self.board.black = state_dict['black'][:]
+    def _load_state(self, state_dict: dict) -> None:
+        self.board.matrix = state_dict['matrix']
+        self.board.white = state_dict['white']
+        self.board.black = state_dict['black']
         self.match.passant_white = state_dict['passant_w']
         self.match.passant_black = state_dict['passant_b']
