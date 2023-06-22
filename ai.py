@@ -57,6 +57,8 @@ class ChessPlayer():
                 piece.move(move, mock=True)
                 promote_flag = True
                 piece.promote(Queen(piece.get_pos_str(), self.color))
+            if (isinstance(piece, King) or isinstance(piece, Rook)):
+                old_state['piece_moved'] = piece.get_moved
             else:
                 piece.move(move, mock=True)
             if self.color:
@@ -76,7 +78,9 @@ class ChessPlayer():
                 self._load_state(old_state)
                 piece.row = old_state['row']
                 piece.column = old_state['column']
-            if (value < best_move):
+                if (isinstance(piece, King) or isinstance(piece, Rook)):
+                    piece.moved = old_state['piece_moved']
+            if (not self.color and (value < best_move)) or (self.color and (value > best_move)):
                 best_move = value
                 bestMoveFinal = this_move
         self.next_move = bestMoveFinal
@@ -95,9 +99,9 @@ class ChessPlayer():
             else:
                 return 0
         if is_maximizing:
-            best_move = 9999
-        else:
             best_move = -9999
+        else:
+            best_move = 9999
         for x in range(len(possible_moves)):
             promote_flag = False
             piece = possible_moves[x][0]
@@ -116,12 +120,14 @@ class ChessPlayer():
                 piece.move(move, mock=True)
                 promote_flag = True
                 piece.promote(Queen(piece.get_pos_str(), self.color))
+            if (isinstance(piece, King) or isinstance(piece, Rook)):
+                old_state['piece_moved'] = piece.get_moved
             else:
                 piece.move(move, mock=True)
             if (is_maximizing):
-                best_move = min(best_move, self.__minimax(depth - 1, board, not is_maximizing))
-            else:
                 best_move = max(best_move, self.__minimax(depth - 1, board, not is_maximizing))
+            else:
+                best_move = min(best_move, self.__minimax(depth - 1, board, not is_maximizing))
             if promote_flag:
                 self.board._Board__delete_piece(move)
                 self._load_state(old_state)
@@ -131,6 +137,8 @@ class ChessPlayer():
                     self.board.white_group.add(old_state['pawn'])
                 else:
                     self.board.black_group.add(old_state['pawn'])
+                if (isinstance(piece, King) or isinstance(piece, Rook)):
+                    piece.moved = old_state['piece_moved']
             else:
                 self._load_state(old_state)
                 piece.row = old_state['row']
@@ -153,7 +161,7 @@ class ChessPlayer():
             if isinstance(piece, Bishop):
                 eval = eval + 30 + EVAL.white_bishop[piece_row][piece_col]
             if isinstance(piece, Knight):
-                eval = eval + 30 + EVAL.knight[piece_row][piece_col]
+                eval = eval + 30 + EVAL.white_knight[piece_row][piece_col]
             if isinstance(piece, Rook):
                 eval = eval + 50 + EVAL.white_rook[piece_row][piece_col]
             if isinstance(piece, Queen):
@@ -169,11 +177,11 @@ class ChessPlayer():
             piece_col = piece.get_column()
             piece_row = piece.get_row()
             if isinstance(piece, Pawn):
-                eval = eval + 10 + EVAL.white_pawn[piece_row][piece_col]
+                eval = eval + 10 + EVAL.black_pawn[piece_row][piece_col]
             if isinstance(piece, Bishop):
                 eval = eval + 30 + EVAL.black_bishop[piece_row][piece_col]
             if isinstance(piece, Knight):
-                eval = eval + 30 + EVAL.knight[piece_row][piece_col]
+                eval = eval + 30 + EVAL.black_knight[piece_row][piece_col]
             if isinstance(piece, Rook):
                 eval = eval + 50 + EVAL.black_rook[piece_row][piece_col]
             if isinstance(piece, Queen):
