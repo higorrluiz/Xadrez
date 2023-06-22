@@ -39,7 +39,6 @@ class ChessPlayer():
         value = 0
         possible_moves = self.player_moves(self.color, False)
         for x in range(len(possible_moves)):
-            promote_flag = False
             piece = possible_moves[x][0]
             move = possible_moves[x][1]
             this_move = [piece, move]
@@ -54,31 +53,23 @@ class ChessPlayer():
             old_state['passant_b'] = self.match.passant_black
             if (isinstance(piece, King) or isinstance(piece, Rook)):
                 old_state['piece_moved'] = piece.get_moved
+
             piece.move(move, mock=True)
             if self.board.get_king(not piece.is_white) is None: return 9999 if self.color else -9999
-            if isinstance(piece, Pawn) and (move[0] == 0 or move[0] == 7):
-                old_state['pawn'] = piece
-                promote_flag = True
-                piece.promote(Queen(piece.get_pos_str(), self.color))
+            if isinstance(piece, Pawn) and (move[0] in [0, 7]):
+                piece.promote(Queen(piece.get_pos_str(), self.color), mock=True)
+
             if self.color:
                 value = max(best_move, self.__minimax(self.depth - 1, self.board, not self.color))
             else:
                 value = min(best_move, self.__minimax(self.depth - 1, self.board, not self.color))
-            if promote_flag:
-                self.board._Board__delete_piece(move)
-                self._load_state(old_state)
-                piece.row = old_state['row']
-                piece.column = old_state['column']
-                if self.color == True:
-                    self.board.white_group.add(old_state['pawn'])
-                else:
-                    self.board.black_group.add(old_state['pawn'])
-            else:
-                self._load_state(old_state)
-                piece.row = old_state['row']
-                piece.column = old_state['column']
-                if (isinstance(piece, King) or isinstance(piece, Rook)):
-                    piece.moved = old_state['piece_moved']
+            
+            self._load_state(old_state)
+            piece.row = old_state['row']
+            piece.column = old_state['column']
+            if (isinstance(piece, King) or isinstance(piece, Rook)):
+                piece.moved = old_state['piece_moved']
+            
             if (not self.color and (value < best_move)) or (self.color and (value > best_move)):
                 best_move = value
                 bestMoveFinal = this_move
@@ -97,7 +88,6 @@ class ChessPlayer():
         else:
             best_move = 9999
         for x in range(len(possible_moves)):
-            promote_flag = False
             piece = possible_moves[x][0]
             move = possible_moves[x][1]
             old_state = {}
@@ -111,31 +101,22 @@ class ChessPlayer():
             old_state['passant_b'] = self.match.passant_black
             if (isinstance(piece, King) or isinstance(piece, Rook)):
                 old_state['piece_moved'] = piece.get_moved
+            
             piece.move(move, mock=True)
             if self.board.get_king(not piece.is_white) is None: return 9999 if is_maximizing else -9999
             if isinstance(piece, Pawn) and (move[0] == 0 or move[0] == 7):
-                old_state['pawn'] = piece
-                promote_flag = True
-                piece.promote(Queen(piece.get_pos_str(), self.color))
+                piece.promote(Queen(piece.get_pos_str(), self.color), mock=True)
+
             if (is_maximizing):
                 best_move = max(best_move, self.__minimax(depth - 1, board, not is_maximizing))
             else:
                 best_move = min(best_move, self.__minimax(depth - 1, board, not is_maximizing))
-            if promote_flag:
-                self.board._Board__delete_piece(move)
-                self._load_state(old_state)
-                piece.row = old_state['row']
-                piece.column = old_state['column']
-                if is_maximizing:
-                    self.board.white_group.add(old_state['pawn'])
-                else:
-                    self.board.black_group.add(old_state['pawn'])
-                if (isinstance(piece, King) or isinstance(piece, Rook)):
-                    piece.moved = old_state['piece_moved']
-            else:
-                self._load_state(old_state)
-                piece.row = old_state['row']
-                piece.column = old_state['column']
+            
+            self._load_state(old_state)
+            piece.row = old_state['row']
+            piece.column = old_state['column']
+            if (isinstance(piece, King) or isinstance(piece, Rook)):
+                piece.moved = old_state['piece_moved']
         return best_move
 
     def __evaluation(self):
