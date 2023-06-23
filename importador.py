@@ -1,4 +1,3 @@
-import pygame 
 from pygame.locals import *
 
 
@@ -38,6 +37,9 @@ from pygame.locals import *
 # white_pawn = pygame.image.load('assets/images/white pawn.png')
 # white_pawn = pygame.transform.scale(white_pawn, (68, 68))
 # white_pawn_small = pygame.transform.scale(white_pawn, (45, 45))
+
+ASSETS_PATH = "assets/images/menu/"
+STATE_PATH = "assets/state.txt"
 
 tamanho = 68.75
 

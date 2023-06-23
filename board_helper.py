@@ -1,6 +1,7 @@
 from importador import *
 from classes.board import Board
 import math
+import pygame
 
 pygame.init()
 altura = 550
@@ -12,9 +13,9 @@ tela = pygame.display.set_mode((largura,altura))
 pygame.display.set_caption('Jogo')
 clock = pygame.time.Clock()
 
-def selecionado(x,y):
-    x = x/tamanho
-    y = y/tamanho
+def selecionado(pos):
+    x = pos[0]/tamanho
+    y = pos[1]/tamanho
     esquerda = math.floor(x) * tamanho
     cima = math.floor(y) * tamanho
     direita = math.ceil(x) * tamanho - 2
