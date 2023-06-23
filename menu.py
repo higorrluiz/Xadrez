@@ -205,6 +205,7 @@ class Menu:
             pygame.display.update()
 
     def mode_selection(self, ia_toggled: bool):
+        ia_difficulty = 1
         self.tela.blit(self.background, (0, 0))
         fonte_meio = pygame.font.SysFont('Arial', self.tela.get_height() // 15)
         texto = fonte_meio.render('Selecionar modo de jogo', True, (0, 0, 0))
@@ -240,10 +241,17 @@ class Menu:
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONUP:
                 if botao_solo_rect.collidepoint(mouse_pos):
-                    self.game_state = "new_game"
-                    self.game_loop = True
                     ia_toggled = not ia_toggled
                 elif botao_2_rect.collidepoint(mouse_pos):
-                    self.game_loop = False
+                    self.game_state = "new_game"
+                elif botao_easy_rect.collidepoint(mouse_pos):
+                    self.game_state = "new_game"
+                    ia_difficulty = 1
+                elif botao_medium_rect.collidepoint(mouse_pos):
+                    self.game_state = "new_game"
+                    ia_difficulty = 2
+                elif botao_hard_rect.collidepoint(mouse_pos):
+                    self.game_state = "new_game"
+                    ia_difficulty = 3
         
-        return self.game_loop, "mode_selection", ia_toggled
+        return self.game_state, ia_toggled, ia_difficulty

@@ -132,7 +132,7 @@ while game_loop:
         game_state = "game"
 
     elif game_state == "mode_selection":
-        game_loop, game_state, ia_toggled = menu.mode_selection(ia_toggled)
+        game_state, ia_toggled, ia_difficulty = menu.mode_selection(ia_toggled)
     elif game_state == "new_game":
         # deleta estado salvo
         open(STATE_PATH, 'w').close()
@@ -143,11 +143,11 @@ while game_loop:
         peca: Piece = Piece()
         white_turn = True
         check = False
-        has_ia = True
+        has_ia = ia_toggled
         player_is_white = True
         movimentos_validos = []
 
-        if has_ia: ai_player = ChessPlayer(not player_is_white, jogo, tabuleiro, 3)
+        if has_ia: ai_player = ChessPlayer(not player_is_white, jogo, tabuleiro, ia_difficulty)
         pecas = tabuleiro.get_pieces(white_turn)
         for p in pecas:
             p.possible_moves(check)
