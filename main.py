@@ -119,10 +119,12 @@ while game_loop:
     elif game_state == "continue_game":
         tabuleiro: Board = Board(tela, tamanho, STATE_PATH)
         jogo: Match = Match(tabuleiro, STATE_PATH)
-        sel_x, sel_y = 20000, 30000
+        sel = (20000, 30000)
         peca: Piece = Piece()
         white_turn, check, has_ia, player_is_white = get_config(STATE_PATH)
         movimentos_validos = []
+
+        if has_ia: ai_player = ChessPlayer(not player_is_white, jogo, tabuleiro, 3)
         pecas = tabuleiro.get_pieces(white_turn)
         for p in pecas:
             p.possible_moves(check)
