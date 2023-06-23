@@ -131,15 +131,15 @@ class Board():
                         self.black.append(piece)
                         self.black_group.add(piece)
 
-    def __add_piece(self, piece: Type[Piece], pos: tuple[int, int]) -> None:
+    def __add_piece(self, piece: Type[Piece], pos: tuple[int, int], mock: bool = False) -> None:
         self.matrix[pos[0]][pos[1]] = piece
         piece.board = self
         if piece.get_is_white():
             self.white.append(piece)
-            self.white_group.add(piece)
+            if not mock: self.white_group.add(piece)
         else:
             self.black.append(piece)
-            self.black_group.add(piece)
+            if not mock: self.black_group.add(piece)
     
     def __delete_piece(self, pos: tuple[int, int], mock: bool = False) -> None:
         if not mock: self.match.set_cont_zero()
@@ -167,9 +167,9 @@ class Board():
             aux = 1 if piece.is_white else -1
             self.__delete_piece((pos_new[0]-aux, pos_new[1]), mock)
     
-    def promotion(self, piece: Type[Piece], pos: tuple[int, int]) -> None:
-        self.__delete_piece(pos)
-        self.__add_piece(piece, pos)
+    def promotion(self, piece: Type[Piece], pos: tuple[int, int], mock: bool = False) -> None:
+        self.__delete_piece(pos, mock)
+        self.__add_piece(piece, pos, mock)
 
     def desenhar_tabuleiro(self):
         for linha in range(self.linhas):

@@ -15,8 +15,8 @@ class Pawn(Piece):
         self.rect = self.image.get_rect(topleft=POSICOES_TABULEIRO[pos])
         self.name = 'p'
 
-    def promote(self, piece: Type[Piece]) -> None:
-        self.board.promotion(piece, self.get_pos())
+    def promote(self, piece: Type[Piece], mock: bool = False) -> None:
+        self.board.promotion(piece, self.get_pos(), mock)
     
     def possible_moves(self, check: bool) -> None:
         # limpa a lista de movimentos e pega a posicao da peca
