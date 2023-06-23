@@ -1,9 +1,16 @@
 import pygame
+import os
+from importador import ASSETS_PATH, STATE_PATH
+from classes.bishop import Bishop
+from classes.queen import Queen
+from classes.knight import Knight
+from classes.rook import Rook
 
-ASSETS_PATH = "assets/images/menu/"
 
 class Menu:
     def __init__(self, tela: pygame.Surface, game_loop: bool, game_state: bool) -> None:
+        self.saved_state = os.stat(STATE_PATH).st_size != 0
+
         self.tela = tela
         self.game_loop = game_loop
         self.game_state = game_state
@@ -13,18 +20,33 @@ class Menu:
         self.button_height = self.tela.get_height() // 10
         self.button_x = self.tela.get_width() // 2 - self.button_width // 2
         self.button_y = self.tela.get_height() // 2 - self.button_height // 2
+        if self.saved_state: self.botao_continue = pygame.image.load(ASSETS_PATH + "continue_button.png")
         self.botao_play = pygame.image.load(ASSETS_PATH + "play_button.png")
         self.botao_exit = pygame.image.load(ASSETS_PATH + "exit_button.jpg")
         self.botao_options = pygame.image.load(ASSETS_PATH + "options_button.png")
+        if self.saved_state: self.botao_continue_rect = self.botao_play.get_rect(topleft=(self.button_x, self.button_y - self.button_height * 1.5))
         self.botao_play_rect = self.botao_play.get_rect(topleft=(self.button_x, self.button_y))
         self.botao_options_rect = self.botao_options.get_rect(topleft=(self.button_x, self.button_y + self.button_height * 1.5))
         self.botao_exit_rect = self.botao_exit.get_rect(topleft=(self.button_x, self.button_y + self.button_height * 3))
         self.fonte = pygame.font.SysFont('Arial', self.tela.get_height() // 10)
         self.texto_titulo = self.fonte.render('Xadrez 2', True, (255, 255, 255))
+        self.peca_images_white = {
+            "white queen": pygame.transform.scale(pygame.image.load("assets/images/white queen.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "white rook": pygame.transform.scale(pygame.image.load("assets/images/white rook.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "white bishop": pygame.transform.scale(pygame.image.load("assets/images/white bishop.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "white knight": pygame.transform.scale(pygame.image.load("assets/images/white knight.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            }
+        self.peca_images_black = {
+            "black queen": pygame.transform.scale(pygame.image.load("assets/images/black queen.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "black rook": pygame.transform.scale(pygame.image.load("assets/images/black rook.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "black bishop": pygame.transform.scale(pygame.image.load("assets/images/black bishop.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            "black knight": pygame.transform.scale(pygame.image.load("assets/images/black knight.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8)),
+            }
 
     def draw(self) -> tuple[bool, str]:
         self.tela.blit(self.background, (0, 0))
         self.tela.blit(self.texto_titulo, (self.tela.get_width() // 2 - self.texto_titulo.get_width() // 2, self.tela.get_height() // 10))
+        if self.saved_state:self.tela.blit(self.botao_continue, self.botao_continue_rect)
         self.tela.blit(self.botao_play, self.botao_play_rect)
         self.tela.blit(self.botao_options, self.botao_options_rect)
         self.tela.blit(self.botao_exit, self.botao_exit_rect)
@@ -34,7 +56,10 @@ class Menu:
             if (event.type == self.botao_exit) or (event.type == pygame.QUIT):
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONUP:
-                if self.botao_play_rect.collidepoint(mouse_pos):
+                if self.saved_state and self.botao_continue_rect.collidepoint(mouse_pos):
+                    self.game_state = "continue_game"
+                    self.game_loop = True
+                elif self.botao_play_rect.collidepoint(mouse_pos):
                     self.game_state = "new_game"
                     self.game_loop = True
                 elif self.botao_exit_rect.collidepoint(mouse_pos):
@@ -95,6 +120,7 @@ class Menu:
         return show_possible_moves, self.game_state
     
     def end_game(self, text_1: str, text_2: str) -> tuple[bool, str]:
+        self.saved_state = False
         self.tela.blit(self.background, (0, 0))
         fonte = pygame.font.SysFont('Arial', self.tela.get_height() // 20)
         texto_xeque = fonte.render(text_1, True, (0, 0, 0))
@@ -131,3 +157,49 @@ class Menu:
     
     def tie(self) -> tuple[bool, str]:
         return self.end_game('EMPATE', '')
+    
+    def promotion(self, peca, white_turn):
+        self.tela.blit(self.background, (0, 0))
+        texto_promocao = self.fonte.render('PROMOÇÃO', True, (0, 0, 0))
+        texto_promocao_fundo = pygame.Surface((texto_promocao.get_width() + 20, texto_promocao.get_height() + 10))
+        texto_promocao_fundo.fill((255, 255, 255))
+        texto_promocao_fundo.blit(texto_promocao, (10, 5))
+        self.tela.blit(texto_promocao_fundo, (self.tela.get_width() // 2 - texto_promocao_fundo.get_width() // 2, self.tela.get_height() // 4 - texto_promocao_fundo.get_height() // 2))
+        fonte_meio = pygame.font.SysFont('Arial', self.tela.get_height() // 20)
+        texto_meio = fonte_meio.render("Escolha a peça para promover", True, (0, 0, 0))
+        texto_meio_fundo = pygame.Surface((texto_meio.get_width() + 20, texto_meio.get_height() + 10))
+        texto_meio_fundo.fill((255, 255, 255))
+        texto_meio_fundo.blit(texto_meio, (10, 5))
+        self.tela.blit(texto_meio_fundo, ((self.tela.get_width() // 2) - texto_meio.get_width() // 2, self.tela.get_height() // 2 + texto_meio.get_height() // 2))
+        num_pecas = len(self.peca_images_white)
+        largura_disponivel = self.tela.get_width() - 20
+        largura_peca = largura_disponivel // num_pecas
+        y = self.tela.get_height() // 2 + texto_promocao.get_height() * 2
+        x = largura_peca - 10
+        images = self.peca_images_white if white_turn else self.peca_images_black
+        peca_rects = []
+        chosen = False
+        for key in images:
+            peca_image = images[key]
+            peca_rect = pygame.Rect(x, y, peca_image.get_width(), peca_image.get_height())
+            peca_rects.append(peca_rect)
+            self.tela.blit(peca_image, (x, y))
+            x += peca_image.get_width() + 10
+        while not chosen:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+            for rect in peca_rects:
+                if pygame.mouse.get_pressed()[0] and rect.collidepoint(pygame.mouse.get_pos()):
+                    if peca_rects.index(rect) == 0:
+                        peca.promote(Queen(peca.get_pos_str(), white_turn))
+                    if peca_rects.index(rect) == 1:
+                        peca.promote(Rook(peca.get_pos_str(), white_turn))
+                    if peca_rects.index(rect) == 2:
+                        peca.promote(Bishop(peca.get_pos_str(), white_turn)) 
+                    if peca_rects.index(rect) == 3:
+                        peca.promote(Knight(peca.get_pos_str(), white_turn))
+                    chosen = True
+
+            pygame.display.update()

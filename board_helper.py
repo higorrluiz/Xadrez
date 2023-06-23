@@ -1,6 +1,7 @@
 from importador import *
 from classes.board import Board
 import math
+import pygame
 
 pygame.init()
 altura = 550
