@@ -11,7 +11,7 @@ from ai import ChessPlayer
 from importador import STATE_PATH
 
 
-def get_config(arq: str) -> list[bool]:
+def get_config(arq: str) -> tuple[list[bool], int]:
     handle = open(arq, 'r')
     linhas = handle.readlines()
     handle.close()
@@ -19,9 +19,11 @@ def get_config(arq: str) -> list[bool]:
     config = linhas[11:12][0].strip()
     config = [(char == 'T') for char in config]
 
+    ia_difficulty = int(linhas[12:13][0].strip())
+
     # deleta estado retomado
     open(arq, 'w').close()
-    return config
+    return (config, ia_difficulty)
 
 
 def desenha_tela(tabuleiro: Board) -> None:
@@ -57,14 +59,16 @@ def end_turn() -> tuple[bool, list[Piece], str, str]:
 
 
 def player() -> None:
-    global game_state, jogo, tabuleiro, white_turn, peca, pecas, movimentos_validos, sel, winner
+    global game_state, menu, jogo, tabuleiro, white_turn, check, has_ia, player_is_white, ia_difficulty, \
+        peca, pecas, movimentos_validos, sel, winner
+    
     pygame.event.set_blocked(pygame.MOUSEMOTION)
     for event in pygame.event.get():
 
         mouse_pos = pygame.mouse.get_pos()
 
         if (event.type == botao_exit) or (event.type == QUIT):
-            tabuleiro.save_state(STATE_PATH, [white_turn, check, has_ia, player_is_white])
+            tabuleiro.save_state(STATE_PATH, [white_turn, check, has_ia, player_is_white], ia_difficulty)
             pygame.quit()
             exit()
 
@@ -106,6 +110,7 @@ game_state = "menu"
 menu = Menu(tela, game_loop, game_state)
 show_possible_moves = True
 ia_toggled = False
+ia_difficulty = 0
 
 while game_loop:
     tela.fill('black')
@@ -122,10 +127,10 @@ while game_loop:
         jogo: Match = Match(tabuleiro, STATE_PATH)
         sel = (20000, 30000)
         peca: Piece = Piece()
-        white_turn, check, has_ia, player_is_white = get_config(STATE_PATH)
+        (white_turn, check, has_ia, player_is_white), ia_difficulty = get_config(STATE_PATH)
         movimentos_validos = []
 
-        if has_ia: ai_player = ChessPlayer(not player_is_white, jogo, tabuleiro, 3)
+        if has_ia: ai_player = ChessPlayer(not player_is_white, jogo, tabuleiro, ia_difficulty)
         pecas = tabuleiro.get_pieces(white_turn)
         for p in pecas:
             p.possible_moves(check)

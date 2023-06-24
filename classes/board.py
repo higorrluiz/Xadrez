@@ -73,7 +73,7 @@ class Board():
                 
         self.__insert_pieces()
 
-    def save_state(self, arq: str, config: list[bool]) -> None:
+    def save_state(self, arq: str, config: list[bool], ia_difficulty: int) -> None:
         moved_list = []
         handle = open(arq, 'w')
         for i in range(self.linhas):  # 0 - 7
@@ -99,6 +99,8 @@ class Board():
         handle.write(f'{self.match.cont}')  # 10
         handle.write('\n')
         for value in config: handle.write('T' if value else 'F')  # 11
+        handle.write('\n')
+        handle.write(f'{ia_difficulty}')  # 12
         handle.close()
 
     def get_piece(self, pos: tuple[int, int]) -> Type[Piece]:

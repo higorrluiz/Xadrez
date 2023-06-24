@@ -55,6 +55,7 @@ class Menu:
             mouse_pos = pygame.mouse.get_pos()
             if (event.type == self.botao_exit) or (event.type == pygame.QUIT):
                 pygame.quit()
+                exit()
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.saved_state and self.botao_continue_rect.collidepoint(mouse_pos):
                     self.game_state = "continue_game"
@@ -204,7 +205,7 @@ class Menu:
 
             pygame.display.update()
 
-    def mode_selection(self, ia_toggled: bool):
+    def mode_selection(self, ia_toggled: bool) -> tuple[str, bool, int]:
         ia_difficulty = 1
         self.tela.blit(self.background, (0, 0))
         fonte_meio = pygame.font.SysFont('Arial', self.tela.get_height() // 15)
@@ -239,6 +240,7 @@ class Menu:
             mouse_pos = pygame.mouse.get_pos()
             if (event.type == self.botao_exit) or (event.type == pygame.QUIT):
                 pygame.quit()
+                exit()
             if event.type == pygame.MOUSEBUTTONUP:
                 if botao_solo_rect.collidepoint(mouse_pos):
                     ia_toggled = not ia_toggled
@@ -254,4 +256,4 @@ class Menu:
                     self.game_state = "new_game"
                     ia_difficulty = 3
         
-        return self.game_state, ia_toggled, ia_difficulty
+        return (self.game_state, ia_toggled, ia_difficulty)
