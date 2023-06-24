@@ -247,13 +247,43 @@ class Menu:
                 elif botao_2_rect.collidepoint(mouse_pos):
                     self.game_state = "new_game"
                 elif botao_easy_rect.collidepoint(mouse_pos):
-                    self.game_state = "new_game"
+                    self.game_state = "side_selection"
                     ia_difficulty = 1
                 elif botao_medium_rect.collidepoint(mouse_pos):
-                    self.game_state = "new_game"
+                    self.game_state = "side_selection"
                     ia_difficulty = 2
                 elif botao_hard_rect.collidepoint(mouse_pos):
-                    self.game_state = "new_game"
+                    self.game_state = "side_selection"
                     ia_difficulty = 3
         
         return (self.game_state, ia_toggled, ia_difficulty)
+    
+    def side_selection(self):
+        is_white = True
+        self.tela.blit(self.background, (0, 0))
+        fonte_meio = pygame.font.SysFont('Arial', self.tela.get_height() // 15)
+        texto = fonte_meio.render('Selecionar cor para controlar', True, (0, 0, 0))
+        texto_fundo = pygame.Surface((texto.get_width() + 20, texto.get_height() + 10))
+        texto_fundo.fill((255, 255, 255))
+        texto_fundo.blit(texto, (10, 5))
+        self.tela.blit(texto_fundo, (self.tela.get_width() // 2 - texto_fundo.get_width() // 2, self.tela.get_height() // 4 - texto_fundo.get_height() // 2))
+        white_pawn = pygame.transform.scale(pygame.image.load("assets/images/white pawn.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8))
+        black_pawn = pygame.transform.scale(pygame.image.load("assets/images/black pawn.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8))
+        white_pawn_rect = white_pawn.get_rect(topleft=(self.button_x - 20, self.button_y + self.button_height * 1.5))
+        black_pawn_rect = black_pawn.get_rect(topleft=(self.button_x + black_pawn.get_width() + 20, self.button_y + self.button_height * 1.5))
+        self.tela.blit(white_pawn, white_pawn_rect)
+        self.tela.blit(black_pawn, black_pawn_rect)
+        for event in pygame.event.get():
+            mouse_pos = pygame.mouse.get_pos()
+            if (event.type == self.botao_exit) or (event.type == pygame.QUIT):
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONUP:
+                if white_pawn_rect.collidepoint(mouse_pos):
+                    self.game_state = "new_game"
+                    is_white = True
+                elif black_pawn_rect.collidepoint(mouse_pos):
+                    self.game_state = "new_game"
+                    is_white = False
+
+        return (self.game_state, is_white)
