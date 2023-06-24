@@ -54,7 +54,7 @@ class ChessPlayer():
                 old_state['piece_moved'] = piece.get_moved()
                 if isinstance(piece, King) and abs(piece.get_column() - move[1]) > 1:
                     castle_flag = True
-                    rook_column = 0 if (piece.get_column() == 2) else 7
+                    rook_column = 0 if (move[1] == 2) else 7
                     rook = self.board.get_piece((move[0], rook_column))
                     old_state['rook_pos'] = rook.get_pos()
 
@@ -105,7 +105,7 @@ class ChessPlayer():
                 old_state['piece_moved'] = piece.get_moved()
                 if isinstance(piece, King) and abs(piece.get_column() - move[1]) > 1:
                     castle_flag = True
-                    rook_column = 0 if (piece.get_column() == 2) else 7
+                    rook_column = 0 if (move[1] == 2) else 7
                     rook = self.board.get_piece((move[0], rook_column))
                     old_state['rook_pos'] = rook.get_pos()
             
