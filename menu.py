@@ -196,7 +196,7 @@ class Menu:
                     if peca_rects.index(rect) == 0:
                         peca.promote(Queen(peca.get_pos_str(), white_turn))
                     if peca_rects.index(rect) == 1:
-                        peca.promote(Rook(peca.get_pos_str(), white_turn))
+                        peca.promote(Rook(peca.get_pos_str(), white_turn, True))
                     if peca_rects.index(rect) == 2:
                         peca.promote(Bishop(peca.get_pos_str(), white_turn)) 
                     if peca_rects.index(rect) == 3:
