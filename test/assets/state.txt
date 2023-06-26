@@ -1,0 +1,13 @@
+rnbq-bnr
+-pppppp-
+p------p
+----k---
+--------
+P------P
+-PPPPPP-
+RNBQKBNR
+FFFFFF
+----
+0
+FFFT
+1
