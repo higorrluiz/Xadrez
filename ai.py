@@ -49,8 +49,14 @@ class ChessPlayer():
             old_state['passant_b'] = self.match.passant_black
             old_state['column'] = piece.get_column()
             old_state['row'] = piece.get_row()
+            castle_flag = False
             if (isinstance(piece, King) or isinstance(piece, Rook)):
-                old_state['piece_moved'] = piece.get_moved
+                old_state['piece_moved'] = piece.get_moved()
+                if isinstance(piece, King) and abs(piece.get_column() - move[1]) > 1:
+                    castle_flag = True
+                    rook_column = 0 if (move[1] == 2) else 7
+                    rook = self.board.get_piece((move[0], rook_column))
+                    old_state['rook_pos'] = rook.get_pos()
 
             piece.move(move, mock=True)
             if self.board.get_king(not piece.get_is_white()) is None: return inf if self.color else -inf
@@ -67,6 +73,10 @@ class ChessPlayer():
             piece.column = old_state['column']
             if (isinstance(piece, King) or isinstance(piece, Rook)):
                 piece.moved = old_state['piece_moved']
+                if castle_flag:
+                    pos = old_state['rook_pos']
+                    rook.row = pos[0]
+                    rook.column = pos[1]
             
             if (not self.color and (value < best_move)) or (self.color and (value > best_move)):
                 best_move = value
@@ -90,8 +100,14 @@ class ChessPlayer():
             old_state['passant_b'] = self.match.passant_black
             old_state['column'] = piece.get_column()
             old_state['row'] = piece.get_row()
+            castle_flag = False
             if (isinstance(piece, King) or isinstance(piece, Rook)):
-                old_state['piece_moved'] = piece.get_moved
+                old_state['piece_moved'] = piece.get_moved()
+                if isinstance(piece, King) and abs(piece.get_column() - move[1]) > 1:
+                    castle_flag = True
+                    rook_column = 0 if (move[1] == 2) else 7
+                    rook = self.board.get_piece((move[0], rook_column))
+                    old_state['rook_pos'] = rook.get_pos()
             
             piece.move(move, mock=True)
             if self.board.get_king(not piece.is_white) is None: return inf if is_maximizing else -inf
@@ -108,6 +124,10 @@ class ChessPlayer():
             piece.column = old_state['column']
             if (isinstance(piece, King) or isinstance(piece, Rook)):
                 piece.moved = old_state['piece_moved']
+                if castle_flag:
+                    pos = old_state['rook_pos']
+                    rook.row = pos[0]
+                    rook.column = pos[1]
         return best_move
 
     def __evaluation(self) -> float:

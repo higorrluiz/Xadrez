@@ -55,12 +55,13 @@ class Menu:
             mouse_pos = pygame.mouse.get_pos()
             if (event.type == self.botao_exit) or (event.type == pygame.QUIT):
                 pygame.quit()
+                exit()
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.saved_state and self.botao_continue_rect.collidepoint(mouse_pos):
                     self.game_state = "continue_game"
                     self.game_loop = True
                 elif self.botao_play_rect.collidepoint(mouse_pos):
-                    self.game_state = "new_game"
+                    self.game_state = "mode_selection"
                     self.game_loop = True
                 elif self.botao_exit_rect.collidepoint(mouse_pos):
                     self.game_loop = False
@@ -195,7 +196,7 @@ class Menu:
                     if peca_rects.index(rect) == 0:
                         peca.promote(Queen(peca.get_pos_str(), white_turn))
                     if peca_rects.index(rect) == 1:
-                        peca.promote(Rook(peca.get_pos_str(), white_turn))
+                        peca.promote(Rook(peca.get_pos_str(), white_turn, True))
                     if peca_rects.index(rect) == 2:
                         peca.promote(Bishop(peca.get_pos_str(), white_turn)) 
                     if peca_rects.index(rect) == 3:
@@ -203,3 +204,86 @@ class Menu:
                     chosen = True
 
             pygame.display.update()
+
+    def mode_selection(self, ia_toggled: bool) -> tuple[str, bool, int]:
+        ia_difficulty = 1
+        self.tela.blit(self.background, (0, 0))
+        fonte_meio = pygame.font.SysFont('Arial', self.tela.get_height() // 15)
+        texto = fonte_meio.render('Selecionar modo de jogo', True, (0, 0, 0))
+        texto_fundo = pygame.Surface((texto.get_width() + 20, texto.get_height() + 10))
+        texto_fundo.fill((255, 255, 255))
+        texto_fundo.blit(texto, (10, 5))
+        self.tela.blit(texto_fundo, (self.tela.get_width() // 2 - texto_fundo.get_width() // 2, self.tela.get_height() // 4 - texto_fundo.get_height() // 2))
+        botao_2 = pygame.image.load(ASSETS_PATH + "player_v_player.png")
+        button_x = self.tela.get_width() // 2 - botao_2.get_width() // 2
+
+        if not ia_toggled:
+            botao_solo = pygame.image.load(ASSETS_PATH + "player_v_cpu.png")
+            botao_2_rect = botao_2.get_rect(topleft=(button_x, self.button_y + self.button_height * 1.5))
+        else:
+            botao_solo = pygame.image.load(ASSETS_PATH + "player_v_cpu_toggled.png")
+            botao_easy = pygame.image.load(ASSETS_PATH + "easy_button.png")
+            botao_medium = pygame.image.load(ASSETS_PATH + "mid_button.png")
+            botao_hard = pygame.image.load(ASSETS_PATH + "hard_button.png")
+            botao_easy_rect = botao_easy.get_rect(topleft=(self.button_x - self.button_width * 1.2, self.button_y + self.button_height * 1.5))
+            botao_medium_rect = botao_medium.get_rect(topleft=(self.button_x, self.button_y + self.button_height * 1.5))
+            botao_hard_rect = botao_hard.get_rect(topleft=(self.button_x + self.button_width * 1.2, self.button_y + self.button_height * 1.5))
+            botao_2_rect = botao_2.get_rect(topleft=(button_x, self.button_y + self.button_height * 3))
+            self.tela.blit(botao_easy, botao_easy_rect)
+            self.tela.blit(botao_medium, botao_medium_rect)
+            self.tela.blit(botao_hard, botao_hard_rect)
+
+        botao_solo_rect = botao_solo.get_rect(topleft=(button_x, self.button_y))
+        self.tela.blit(botao_solo, botao_solo_rect)
+        self.tela.blit(botao_2, botao_2_rect)
+        for event in pygame.event.get():
+            mouse_pos = pygame.mouse.get_pos()
+            if (event.type == self.botao_exit) or (event.type == pygame.QUIT):
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONUP:
+                if botao_solo_rect.collidepoint(mouse_pos):
+                    ia_toggled = not ia_toggled
+                elif botao_2_rect.collidepoint(mouse_pos):
+                    self.game_state = "new_game"
+                elif botao_easy_rect.collidepoint(mouse_pos):
+                    self.game_state = "side_selection"
+                    ia_difficulty = 1
+                elif botao_medium_rect.collidepoint(mouse_pos):
+                    self.game_state = "side_selection"
+                    ia_difficulty = 2
+                elif botao_hard_rect.collidepoint(mouse_pos):
+                    self.game_state = "side_selection"
+                    ia_difficulty = 3
+        
+        return (self.game_state, ia_toggled, ia_difficulty)
+    
+    def side_selection(self):
+        is_white = True
+        self.tela.blit(self.background, (0, 0))
+        fonte_meio = pygame.font.SysFont('Arial', self.tela.get_height() // 15)
+        texto = fonte_meio.render('Selecionar cor para controlar', True, (0, 0, 0))
+        texto_fundo = pygame.Surface((texto.get_width() + 20, texto.get_height() + 10))
+        texto_fundo.fill((255, 255, 255))
+        texto_fundo.blit(texto, (10, 5))
+        self.tela.blit(texto_fundo, (self.tela.get_width() // 2 - texto_fundo.get_width() // 2, self.tela.get_height() // 4 - texto_fundo.get_height() // 2))
+        white_pawn = pygame.transform.scale(pygame.image.load("assets/images/white pawn.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8))
+        black_pawn = pygame.transform.scale(pygame.image.load("assets/images/black pawn.png"), (self.tela.get_width() // 8, self.tela.get_height() // 8))
+        white_pawn_rect = white_pawn.get_rect(topleft=(self.button_x - 20, self.button_y + self.button_height * 1.5))
+        black_pawn_rect = black_pawn.get_rect(topleft=(self.button_x + black_pawn.get_width() + 20, self.button_y + self.button_height * 1.5))
+        self.tela.blit(white_pawn, white_pawn_rect)
+        self.tela.blit(black_pawn, black_pawn_rect)
+        for event in pygame.event.get():
+            mouse_pos = pygame.mouse.get_pos()
+            if (event.type == self.botao_exit) or (event.type == pygame.QUIT):
+                pygame.quit()
+                exit()
+            if event.type == pygame.MOUSEBUTTONUP:
+                if white_pawn_rect.collidepoint(mouse_pos):
+                    self.game_state = "new_game"
+                    is_white = True
+                elif black_pawn_rect.collidepoint(mouse_pos):
+                    self.game_state = "new_game"
+                    is_white = False
+
+        return (self.game_state, is_white)
