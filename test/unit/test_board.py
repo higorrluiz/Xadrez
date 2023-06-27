@@ -20,7 +20,7 @@ from classes.rook import Rook
 from classes.bishop import Bishop
 from classes.match import Match
 
-STATE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets", "state.txt")
+STATE_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "assets", "state1.txt")
 
 class TestBoard(unittest.TestCase):
     def setUp(self) -> None:
@@ -166,6 +166,3 @@ class TestBoard(unittest.TestCase):
                 call('\n'),
                 call('2'),
             ])
-
-if __name__ == "__main__":
-    unittest.main()
