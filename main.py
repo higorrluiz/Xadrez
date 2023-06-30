@@ -89,10 +89,8 @@ def player() -> None:
                     sel = mouse_pos
                     peca = p
                     peca.selecionado = True
-                    print(peca.name, peca.is_white)
                     movimentos_validos = peca.get_moves()
                     movimentos_validos = [POSICOES_TABULEIRO_LISTA[x][y] for (x, y) in movimentos_validos]
-                    print(posicao_do_quadrado())
 
             # se a peca esta selecionada e o usuario clica em outro quadrado
             if peca.selecionado == True and not (peca.rect.collidepoint(mouse_pos)):

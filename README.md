@@ -21,7 +21,7 @@ Depois disso, podemos rodar o arquivo main.py estando na raiz do projeto:
 #### macOS:
 `python3 main.py`
 #### Linux:
-`python main.py`
+`python3 main.py`
 
 ### Criando um executável através do PyInstaller
 
