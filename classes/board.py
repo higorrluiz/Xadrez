@@ -187,14 +187,3 @@ class Board():
             pygame.draw.rect(self.tela, primeira_cor, (coluna*self.tam, linha*self.tam, self.tam, self.tam))
         else:
             pygame.draw.rect(self.tela, segunda_cor, (coluna*self.tam, linha*self.tam, self.tam, self.tam))
-
-    def printa(self) -> None:
-        for linha in reversed(self.matrix):
-            for p in linha:
-                if p is not None:
-                    print((p.name).lower() if p.is_white else (p.name).upper(), end=' ')
-                else:
-                    print('-', end=' ')
-            print()
-        print()
-        print()

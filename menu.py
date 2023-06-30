@@ -1,5 +1,6 @@
 import pygame
 import os
+from sys import exit
 from importador import ASSETS_PATH, STATE_PATH
 from classes.bishop import Bishop
 from classes.queen import Queen
